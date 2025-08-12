@@ -5,13 +5,13 @@ import Logo from "../../assets/Logo.png";
 
 const Navbar = () => {
   return (
-    <nav className="bg-lime-500 w-full h-20 flex justify-center items-center text-white shadow-lg">
+    <nav className="bg-green-600 w-full h-20 flex justify-center items-center text-white shadow-lg">
       <div className="flex justify-between items-center w-full max-w-screen-xl mx-auto px-6">
         <a href="/" className="flex-shrink-0">
           <img
             src={Logo}
             alt="Leighton Industries Logo"
-            className="h-16 w-86"
+            className="h-14 w-68"
           />
         </a>
 
@@ -39,8 +39,8 @@ const Navbar = () => {
             </li>
           </ul>
 
-          <div className="flex items-center space-x-8">
-            {/* <a
+          {/* <div className="flex items-center space-x-8">
+            <a
               href="/cart"
               className="relative hover:text-gray-200 transition-colors"
             >
@@ -49,14 +49,14 @@ const Navbar = () => {
                 3
               </span>
             </a> */}
-            {/* <a
+          {/* <a
               href="/login"
               className="flex items-center space-x-2 font-semibold hover:text-gray-200 transition-colors"
             >
               <FiUser className="h-6 w-6" />
               <span>SignUp</span>
             </a> */}
-          </div>
+          {/* </div> */}
         </div>
       </div>
     </nav>

@@ -52,7 +52,7 @@ const HeroSlider = () => {
         {sliderData.map((slide, index) => (
           <SwiperSlide key={index} className="group">
             <div
-              className="w-full h-full bg-cover bg-center"
+              className="w-full h-full bg-contain bg-center"
               style={{ backgroundImage: `url(${slide.image})` }}
             >
               <div className="w-full h-full flex items-center justify-center bg-black/10 bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 hover:bg-black/50 ">
