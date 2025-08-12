@@ -14,10 +14,10 @@ const categories = [
 
 const ProductCategories = () => {
   return (
-    <div className="py-16 bg-gray-100" style={{backgroundImage: "url(https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDI1LTA3L3Jhd3BpeGVsX29mZmljZV8yMl9hYnN0cmFjdF92ZWN0b3Jfb2ZfZ3JlZW5fbmVvbl9iYWNrZ3JvdW5kX2dyYV82NWZhYTM1MC05OGRlLTQ4MGYtYWE2NS05MDA0Y2QzNTRlYjItYmFubmVyLW1kNWdjeDJzLmpwZw.jpg"}}>
+    <div className="py-16 bg-gray-100" style={{backgroundImage: "url()"}}>
       <div className="max-w-7xl mx-auto px-6 text-center">
-        <h2 className="text-4xl font-bold text-white mb-2">Find the Right Battery</h2>
-        <p className="text-gray-200 mb-12 text-lg">Select your vehicle type to get started.</p>
+        <h2 className="text-4xl font-bold text-black mb-2">Find the Right Battery</h2>
+        <p className="text-black mb-12 text-lg">Select your vehicle type to get started.</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {categories.map((cat, index) => (
             <div 

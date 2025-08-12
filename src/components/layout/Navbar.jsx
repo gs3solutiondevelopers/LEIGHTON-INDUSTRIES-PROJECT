@@ -8,7 +8,11 @@ const Navbar = () => {
     <nav className="bg-green-600 w-full h-20 flex justify-center items-center text-white shadow-lg">
       <div className="flex justify-between items-center w-full max-w-screen-xl mx-auto px-6">
         <a href="/" className="flex-shrink-0">
-          <img src={Logo} alt="Leighton Industries Logo" className="h-14 w-68" />
+          <img
+            src={Logo}
+            alt="Leighton Industries Logo"
+            className="h-14 w-68"
+          />
         </a>
 
         <div className="flex items-center space-x-10">
@@ -35,7 +39,7 @@ const Navbar = () => {
             </li>
           </ul>
 
-          <div className="flex items-center space-x-8">
+          {/* <div className="flex items-center space-x-8">
             <a
               href="/cart"
               className="relative hover:text-gray-200 transition-colors"
@@ -44,15 +48,15 @@ const Navbar = () => {
               <span className="absolute -top-2 -right-2 bg-red-600 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-lime-600">
                 3
               </span>
-            </a>
-            <a
+            </a> */}
+          {/* <a
               href="/login"
               className="flex items-center space-x-2 font-semibold hover:text-gray-200 transition-colors"
             >
               <FiUser className="h-6 w-6" />
               <span>SignUp</span>
-            </a>
-          </div>
+            </a> */}
+          {/* </div> */}
         </div>
       </div>
     </nav>
