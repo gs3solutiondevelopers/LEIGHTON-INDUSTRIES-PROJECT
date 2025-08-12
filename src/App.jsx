@@ -5,6 +5,8 @@ import Footer from './components/layout/Footer'
 import HomePage from './pages/HomePage'
 import ContactPage from './pages/ContactPage'
 import ProductsPage from './pages/ProductsPage'
+import WhatsApp from './components/common/WhatsApp'
+import CookieBanner from './components/common/CookieBanner'
 const App = () => {
   return (
      <Router>
@@ -19,6 +21,8 @@ const App = () => {
           </Routes>
         </main>
         <Footer />
+        <WhatsApp />
+        <CookieBanner/>
       </div>
     </Router>
   )

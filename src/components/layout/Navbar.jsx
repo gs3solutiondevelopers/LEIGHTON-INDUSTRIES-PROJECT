@@ -49,13 +49,13 @@ const Navbar = () => {
                 3
               </span>
             </a> */}
-            <a
+            {/* <a
               href="/login"
               className="flex items-center space-x-2 font-semibold hover:text-gray-200 transition-colors"
             >
               <FiUser className="h-6 w-6" />
               <span>SignUp</span>
-            </a>
+            </a> */}
           </div>
         </div>
       </div>
