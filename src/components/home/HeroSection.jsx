@@ -47,12 +47,12 @@ const HeroSlider = () => {
         pagination={{ clickable: true ,type:"custom"}}
         loop={true}
         autoplay={{ delay: 5000, disableOnInteraction: false }}
-        className="h-[80vh] min-h-[400px]"
+        className="h-[80vh] min-h-[400px] "
       >
         {sliderData.map((slide, index) => (
           <SwiperSlide key={index} className="group">
             <div
-              className="w-full h-full bg-contain bg-center"
+              className="w-full h-full bg-cover bg-no-repeat bg-center"
               style={{ backgroundImage: `url(${slide.image})` }}
             >
               <div className="w-full h-full flex items-center justify-center bg-black/10 bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 hover:bg-black/50 ">
@@ -61,7 +61,7 @@ const HeroSlider = () => {
                     {slide.headline}
                   </h1>
                   <p className="text-lg md:text-xl mb-6">{slide.description}</p>
-                  <button className="bg-brand-green text-white font-bold py-3 px-8 rounded-md bg-green-500 hover:bg-green-600 transition-all duration-300 transform hover:scale-105">
+                  <button className="bg-brand-green text-white font-bold py-3 px-8 rounded-md bg-lime-500 hover:bg-lime-600 transition-all duration-300 transform hover:scale-105">
                     {slide.buttonText}
                   </button>
                 </div>

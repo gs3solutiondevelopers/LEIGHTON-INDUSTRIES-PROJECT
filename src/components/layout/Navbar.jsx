@@ -5,13 +5,13 @@ import Logo from "../../assets/Logo.png";
 
 const Navbar = () => {
   return (
-    <nav className="bg-green-600 w-full h-20 flex justify-center items-center text-white shadow-lg">
+    <nav className="bg-lime-500 w-full h-20 flex justify-center items-center text-white shadow-lg">
       <div className="flex justify-between items-center w-full max-w-screen-xl mx-auto px-6">
         <a href="/" className="flex-shrink-0">
           <img
             src={Logo}
             alt="Leighton Industries Logo"
-            className="h-14 w-68"
+            className="h-14 w-68 "
           />
         </a>
 
