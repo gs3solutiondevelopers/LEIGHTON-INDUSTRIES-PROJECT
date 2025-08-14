@@ -1,0 +1,51 @@
+
+@import 'tailwindcss';
+
+
+/* Define CSS Variables for our color palette */
+:root {
+  --primary-red: #D81E1C;
+  --primary-green: #37A72A;
+  --primary-blue: #23408F;
+  --dark-text: #2c2c2c;
+  --light-text: #ffffff;
+  --bg-light-gray: #f4f4f4;
+}
+
+body {
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  color: var(--dark-text);
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.nav-link-underline {
+  @apply relative font-semibold tracking-wide py-2;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-link-underline::after {
+  @apply absolute bg-white;
+  content: '';
+  height: 2px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav-link-underline:hover::after {
+  transform: scaleX(1);
+}
