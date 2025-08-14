@@ -9,7 +9,7 @@ import WhatsApp from "./components/common/WhatsApp";
 import CookieBanner from "./components/common/CookieBanner";
 import WarrantyPage from "./pages/WarrantyPage";
 import SupportPage from "./pages/Support";
-import Complaint from "./pages/Complain";
+import Complaint from "./pages/Complaint";
 import Dealer from "./pages/Dealer";
 const App = () => {
   return (
