@@ -8,6 +8,8 @@ import ProductsPage from './pages/ProductsPage'
 import WhatsApp from './components/common/WhatsApp'
 import CookieBanner from './components/common/CookieBanner'
 import WarrantyPage from './pages/WarrantyPage'
+import SupportPage from './pages/Support'
+import Complaint from './pages/Complain'
 const App = () => {
   return (
      <Router>
@@ -19,9 +21,10 @@ const App = () => {
    
             <Route path="/batteries" element={<ProductsPage />} />
             <Route path="/contact" element={<ContactPage />} />
-
+          <Route path="/support" element={<SupportPage />} />
           {/* supprt routes */}
             <Route path='support/warranty' element={<WarrantyPage/>}/>
+            <Route path='support/complaint' element={<Complaint/>}/>
           </Routes>
         </main>
         <Footer />

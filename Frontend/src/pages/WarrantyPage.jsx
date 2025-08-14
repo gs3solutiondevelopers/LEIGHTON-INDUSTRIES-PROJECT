@@ -2,7 +2,9 @@
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import warranty from '../assets/warranty.png'
+import warranty from '../assets/warranty.png';
+import { FiFileText, FiCheckCircle, FiMessageSquare, FiClipboard } from 'react-icons/fi';
+
 const WarrantyPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -14,13 +16,13 @@ const WarrantyPage = () => {
   return (
     <div className="bg-gray-50">
       {/* Header Banner */}
-      <div className="relative h-108">
+      <div className="relative h-106">
         <img 
           src={warranty} 
           alt="Customer support" 
-          className="absolute inset-0 w-full h-108 object-cover z-0"
+          className="absolute inset-0 w-full h-full object-cover z-0"
         />
-        <div className="relative z-10 h-106 flex flex-col items-center justify-center bg-black/60 text-white text-center p-4">
+        <div className="relative z-10 h-full flex flex-col items-center justify-center bg-black/60 text-white text-center p-4">
           <h1 className="text-5xl font-bold">Warranty Claim</h1>
           <p className="text-lg mt-4">Please review the conditions below before submitting your claim.</p>
         </div>
@@ -30,25 +32,39 @@ const WarrantyPage = () => {
       <div className="max-w-4xl mx-auto px-6 py-20">
         <div className="space-y-12">
 
-          {/* Warranty Conditions Section */}
+          {/* Redesigned Warranty Conditions Section */}
           <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h2 className="text-3xl font-semibold text-brand-dark mb-6">Warranty Process & Conditions</h2>
-            <div className="prose lg:prose-lg max-w-none">
-              <h3>How to Claim Your Warranty</h3>
-              <ol>
-                <li>Complete the warranty claim form below with all required details.</li>
-                <li>Ensure the battery serial number and date of purchase are accurate.</li>
-                <li>Provide a clear description of the issue you are facing with the battery.</li>
-                <li>Once submitted, our support team will review your claim and contact you within 2-3 business days.</li>
-              </ol>
+            <h2 className="text-3xl font-semibold text-brand-dark mb-8 text-center">Warranty Process & Conditions</h2>
+            
+            <div className="mb-10">
+              <h3 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center"><FiClipboard className="mr-3 text-green-500"/> How to Claim Your Warranty</h3>
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div className="bg-gray-50 p-4 rounded-lg flex items-start space-x-4">
+                  <div className="flex-shrink-0 text-green-500 font-bold text-2xl">1.</div>
+                  <p>Complete the claim form below with all required details, ensuring accuracy.</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg flex items-start space-x-4">
+                  <div className="flex-shrink-0 text-green-500 font-bold text-2xl">2.</div>
+                  <p>Provide a clear description of the issue you are facing with the battery.</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg flex items-start space-x-4">
+                  <div className="flex-shrink-0 text-green-500 font-bold text-2xl">3.</div>
+                  <p>Attach a clear copy of your original proof of purchase (invoice or receipt).</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg flex items-start space-x-4">
+                  <div className="flex-shrink-0 text-green-500 font-bold text-2xl">4.</div>
+                  <p>Our support team will review your claim and contact you within 2-3 business days.</p>
+                </div>
+              </div>
+            </div>
 
-              <h3>Conditions for a Valid Warranty Claim</h3>
-              <ul>
-                <li>The warranty is only valid from the original date of purchase and is non-transferable.</li>
-                <li>The claim must be accompanied by the original proof of purchase (invoice or receipt).</li>
-                <li>The battery must not show any signs of physical damage, tampering, or unauthorized repairs.</li>
-                <li>The warranty is void if the battery is used in a vehicle type for which it was not designed.</li>
-                <li>Normal wear and tear or damage due to negligence (e.g., improper charging, deep discharge) is not covered.</li>
+            <div>
+              <h3 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center"><FiCheckCircle className="mr-3 text-green-500"/> Conditions for a Valid Claim</h3>
+              <ul className="space-y-4">
+                <li className="flex items-start"><FiFileText className="h-5 w-5 mr-3 mt-1 text-green-500 flex-shrink-0"/>The warranty is valid only from the original date of purchase and is non-transferable.</li>
+                <li className="flex items-start"><FiFileText className="h-5 w-5 mr-3 mt-1 text-green-500 flex-shrink-0"/>The battery must not show signs of physical damage, tampering, or unauthorized repairs.</li>
+                <li className="flex items-start"><FiFileText className="h-5 w-5 mr-3 mt-1 text-green-500 flex-shrink-0"/>The warranty is void if the battery is used in a vehicle type for which it was not designed.</li>
+                <li className="flex items-start"><FiFileText className="h-5 w-5 mr-3 mt-1 text-green-500 flex-shrink-0"/>Normal wear and tear or damage due to negligence is not covered.</li>
               </ul>
             </div>
           </div>
