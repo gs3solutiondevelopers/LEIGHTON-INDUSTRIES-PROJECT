@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   FaFacebook,
@@ -6,20 +7,17 @@ import {
   FaPaperPlane,
   FaInstagram,
 } from "react-icons/fa";
-import Logo from "../../assets/Logo.png";
+import Logo2 from "../../assets/Logo2.png";
 
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-400">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
-
-          <div className="flex flex-col ">
-            <img src={Logo} alt="Leighton Industries" className="h-1 w-80 mb-2 " />
-            <p className="text-md">
-              The leading manufacturer of high-performance batteries for
-              e-rickshaws, engineered for a greener tomorrow.
-            </p>
+      
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-2">
+          
+          <div className="space-y-4">
+            <img src={Logo2} alt="Leighton Industries" className="h-6 w-auto" />
           </div>
 
           <div className="space-y-4">

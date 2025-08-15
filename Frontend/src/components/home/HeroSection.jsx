@@ -5,20 +5,20 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-import slide1 from "../../assets/slide1.png";
-import slide2 from "../../assets/slide2.png";
+import slider1 from "../../assets/slider1.jpg";
+import slider2 from "../../assets/slider2.png";
 import slide3 from "../../assets/slide3.png";
 import slide4 from "../../assets/slide4.png";
 
 const sliderData = [
   {
-    image: slide1,
+    image: slider1,
     headline: "Dumdaar Battery",
     description: "Shaandaar Performance for your E-Rickshaw.",
     buttonText: "Explore E-Rickshaw Batteries",
   },
   {
-    image: slide2,
+    image: slider2,
     headline: "Engineered for India's Roads",
     description: "Built tough for every journey, every time.",
     buttonText: "Find Your Battery",
@@ -44,7 +44,7 @@ const HeroSlider = () => {
         modules={[Navigation, Pagination, Autoplay]}
         slidesPerView={1}
        
-        pagination={{ clickable: true ,type:"custom"}}
+        pagination={{ clickable: true ,type:"bullets"}}
         loop={true}
         autoplay={{ delay: 5000, disableOnInteraction: false }}
         className="h-[80vh] min-h-[400px] "
