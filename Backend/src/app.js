@@ -19,6 +19,6 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
 export { app };
 
-app.get("/", (req, res) => {
-    res.send("Hello Battery")
-})
+// app.get("/", (req, res) => {
+//     res.send("Hello Battery")
+// })
