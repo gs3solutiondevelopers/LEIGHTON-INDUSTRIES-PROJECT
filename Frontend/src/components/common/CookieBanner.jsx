@@ -32,14 +32,14 @@ const CookieBanner = () => {
       }}
       expires={150}
       enableDeclineButton
-      onAccept={() => {
-        alert(
-          "Cookies accepted! You can now implement your analytics scripts."
-        );
-      }}
-      onDecline={() => {
-        alert("Cookies rejected. Analytics scripts will not be loaded.");
-      }}
+      // onAccept={() => {
+      //   alert(
+      //     "Cookies accepted! You can now implement your analytics scripts."
+      //   );
+      // }}
+      // onDecline={() => {
+      //   alert("Cookies rejected. Analytics scripts will not be loaded.");
+      // }}
     >
       <h4
         style={{
