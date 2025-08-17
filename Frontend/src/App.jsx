@@ -11,6 +11,8 @@ import WarrantyPage from "./pages/WarrantyPage";
 import SupportPage from "./pages/Support";
 import Complaint from "./pages/Complaint";
 import Dealer from "./pages/Dealer";
+import ProductDetails from "./pages/ProductDetails";
+import Terms from "./pages/Terms";
 const App = () => {
   return (
     <Router>
@@ -21,8 +23,10 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
 
             <Route path="/batteries" element={<ProductsPage />} />
+            <Route path="/batteries/:category/:productId" element={<ProductDetails/>}/>
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/support" element={<SupportPage />} />
+            <Route path="/terms-conditions" element={<Terms/>}/>
             {/* supprt routes */}
             <Route path="support/warranty" element={<WarrantyPage />} />
             <Route path="support/complaint" element={<Complaint />} />
