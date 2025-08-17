@@ -1,10 +1,8 @@
-// src/pages/ProductsPage.jsx
 
 import React, { useState } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
-// Corrected import path
 import { batteryData } from '../data/productData';
-// Corrected import path
 import ProductCard from '../components/product/ProductCard';
 
 const categories = [
@@ -20,7 +18,7 @@ const ProductsPage = () => {
 
   return (
     <div className="bg-white">
-      {/* Responsive Header Banner */}
+
       <div className="relative h-72 md:h-96">
         <img 
           src={batteryData[activeCategory].bannerImage} 
@@ -63,7 +61,6 @@ const ProductsPage = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {activeProducts.map((product) => (
