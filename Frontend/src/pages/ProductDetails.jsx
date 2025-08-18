@@ -2,7 +2,7 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 
-import { batteryData, productDetails } from '../data/productData'; 
+import { batteryData, productDetails } from '../data/ProductData'; 
 import { FiZap, FiShield, FiCalendar, FiCheckCircle } from 'react-icons/fi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
