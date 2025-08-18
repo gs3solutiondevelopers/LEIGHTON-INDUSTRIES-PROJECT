@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
-import { batteryData } from '../data/productData';
+import { batteryData } from '../data/ProductData';
 import ProductCard from '../components/product/ProductCard';
 
 const categories = [
