@@ -23,14 +23,17 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
 
             <Route path="/batteries" element={<ProductsPage />} />
-            <Route path="/batteries/:category/:productId" element={<ProductDetails/>}/>
+            <Route
+              path="/batteries/:category/:productId"
+              element={<ProductDetails />}
+            />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/support" element={<SupportPage />} />
-            <Route path="/terms-conditions" element={<Terms/>}/>
+            <Route path="/terms-conditions" element={<Terms />} />
             {/* supprt routes */}
-            <Route path="support/warranty" element={<WarrantyPage />} />
-            <Route path="support/complaint" element={<Complaint />} />
-            <Route path="support/dealer" element={<Dealer />} />
+            <Route path="/support/warranty" element={<WarrantyPage />} />
+            <Route path="/support/complaint" element={<Complaint />} />
+            <Route path="/support/dealer" element={<Dealer />} />
           </Routes>
         </main>
         <Footer />
