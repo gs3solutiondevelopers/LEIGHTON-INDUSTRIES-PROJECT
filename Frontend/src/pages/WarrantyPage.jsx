@@ -1,4 +1,3 @@
-// src/pages/WarrantyPage.jsx
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -15,7 +14,6 @@ const WarrantyPage = () => {
 
   return (
     <div className="bg-gray-50">
-      {/* Header Banner */}
       <div className="relative h-106">
         <img 
           src={warranty} 
@@ -28,11 +26,9 @@ const WarrantyPage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-4xl mx-auto px-6 py-20">
         <div className="space-y-12">
 
-          {/* Redesigned Warranty Conditions Section */}
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-3xl font-semibold text-brand-dark mb-8 text-center">Warranty Process & Conditions</h2>
             
@@ -69,7 +65,6 @@ const WarrantyPage = () => {
             </div>
           </div>
 
-          {/* Claim Submission Form */}
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-3xl font-semibold text-brand-dark mb-6">Claim Submission Form</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

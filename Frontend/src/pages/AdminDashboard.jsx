@@ -53,7 +53,7 @@ const mockWarranty = [
 
 const AdminDashboardPage = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("contacts"); // 'contacts' or 'complaints'
+  const [activeTab, setActiveTab] = useState("contacts"); 
 
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
@@ -119,7 +119,6 @@ const AdminDashboardPage = () => {
           </button>
         </div>
 
-        {/* Tab Content */}
         <AnimatePresence mode="wait">
           {activeTab === "contacts" && (
             <motion.div

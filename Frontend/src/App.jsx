@@ -17,6 +17,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import SuperAdminLogin from "./pages/SuperAdminLogin";
 import SuperDashboard from "./pages/SuperDashboard";
+import About from "./pages/About";
+import Privacy from "./pages/Privacy";
 const App = () => {
   return (
     <Router>
@@ -31,9 +33,12 @@ const App = () => {
               path="/batteries/:category/:productId"
               element={<ProductDetails />}
             />
+            <Route path="/about" element={<About />} />
+
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/support" element={<SupportPage />} />
             <Route path="/terms-conditions" element={<Terms />} />
+            <Route path="/privacy-policy" element={<Privacy/>}/>
             {/* supprt routes */}
             <Route path="/support/warranty" element={<WarrantyPage />} />
             <Route path="/support/complaint" element={<Complaint />} />
@@ -42,14 +47,8 @@ const App = () => {
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
-            <Route
-              path="/super-admin-login"
-              element={<SuperAdminLogin />}
-            />
-            <Route
-              path="/super-admin/dashboard"
-              element={<SuperDashboard />}
-            />
+            <Route path="/super-admin-login" element={<SuperAdminLogin />} />
+            <Route path="/super-admin/dashboard" element={<SuperDashboard />} />
           </Routes>
         </main>
         <Footer />

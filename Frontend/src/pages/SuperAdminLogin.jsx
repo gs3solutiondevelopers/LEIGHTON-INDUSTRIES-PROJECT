@@ -1,18 +1,15 @@
-// src/pages/SuperAdminLogin.jsx
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../assets/Logo.png';
+import Logo2 from '../assets/Logo2.png';
 
 const SuperAdminLogin = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  // Mock login for UI purposes
   const onSubmit = (data) => {
     console.log("Super Admin Login attempt with:", data);
-    // In a real app, you'd check credentials. For now, we'll just log in.
     localStorage.setItem('superAdminToken', 'dummy-super-secret-token');
     navigate('/super-admin/dashboard');
   };
@@ -20,7 +17,7 @@ const SuperAdminLogin = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-xl">
-        <img src={Logo} alt="Leighton Industries" className="h-16 w-auto mx-auto" />
+        <img src={Logo2} alt="Leighton Industries" className="h-16 w-auto mx-auto" />
         <h1 className="text-3xl font-bold text-center text-brand-dark">Super Admin Login</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
@@ -45,7 +42,7 @@ const SuperAdminLogin = () => {
           </div>
           <button 
             type="submit" 
-            className="w-full bg-blue-600 text-white font-bold py-3 rounded-md hover:bg-blue-700 transition-colors"
+            className="w-full bg-lime-500 text-white font-bold py-3 rounded-md hover:bg-lime-600 transition-colors"
           >
             Login as Super Admin
           </button>
