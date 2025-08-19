@@ -13,6 +13,10 @@ import Complaint from "./pages/Complaint";
 import Dealer from "./pages/Dealer";
 import ProductDetails from "./pages/ProductDetails";
 import Terms from "./pages/Terms";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminLogin from "./pages/AdminLogin";
+import SuperAdminLogin from "./pages/SuperAdminLogin";
+import SuperDashboard from "./pages/SuperDashboard";
 const App = () => {
   return (
     <Router>
@@ -34,6 +38,18 @@ const App = () => {
             <Route path="/support/warranty" element={<WarrantyPage />} />
             <Route path="/support/complaint" element={<Complaint />} />
             <Route path="/support/dealer" element={<Dealer />} />
+
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+            <Route
+              path="/super-admin-login"
+              element={<SuperAdminLogin />}
+            />
+            <Route
+              path="/super-admin/dashboard"
+              element={<SuperDashboard />}
+            />
           </Routes>
         </main>
         <Footer />

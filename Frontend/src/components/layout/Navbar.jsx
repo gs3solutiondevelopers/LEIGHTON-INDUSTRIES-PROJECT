@@ -1,17 +1,12 @@
+// src/components/layout/Navbar.jsx
 
 import React, { useState } from "react";
-import { FiUser, FiX, FiMenu } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { FiX, FiMenu } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import Logo from "../../assets/Logo.png";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const handleNavigate = (path) => {
-    setIsMenuOpen(false);
-    navigate(path);
-  };
 
   return (
     <nav className="bg-lime-500 w-full h-20 flex justify-center items-center text-white shadow-lg relative z-50">
@@ -26,13 +21,28 @@ const Navbar = () => {
 
         <div className="hidden md:flex items-center space-x-10">
           <ul className="flex items-center space-x-12">
-            <li><Link to="/about" className="nav-link-underline">About Us</Link></li>
-            <li><Link to="/batteries" className="nav-link-underline">Our Batteries</Link></li>
-            <li><Link to="/support" className="nav-link-underline">Support</Link></li>
-            <li><Link to="/contact" className="nav-link-underline">Contact Us</Link></li>
+            <li>
+              <Link to="/about" className="nav-link-underline">
+                About Us
+              </Link>
+            </li>
+            <li>
+              <Link to="/batteries" className="nav-link-underline">
+                Our Batteries
+              </Link>
+            </li>
+            <li>
+              <Link to="/support" className="nav-link-underline">
+                Support
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="nav-link-underline">
+                Contact Us
+              </Link>
+            </li>
           </ul>
         </div>
-
 
         <div className="md:hidden">
           <button onClick={() => setIsMenuOpen(true)} aria-label="Open menu">
@@ -41,9 +51,8 @@ const Navbar = () => {
         </div>
       </div>
 
-
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-gray-900 text-white p-8 transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed top-0 right-0 h-full w-64 bg-gray-900 text-white p-8 transform transition-transform duration-300 ease-in-out md:hidden z-50 ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -53,17 +62,32 @@ const Navbar = () => {
           </button>
         </div>
         <ul className="flex flex-col space-y-6 text-lg">
-          <li><button onClick={() => handleNavigate('/about')}>About Us</button></li>
-          <li><button onClick={() => handleNavigate('/batteries')}>Our Batteries</button></li>
-          <li><button onClick={() => handleNavigate('/support')}>Support</button></li>
-          <li><button onClick={() => handleNavigate('/contact')}>Contact Us</button></li>
-         
+          <li>
+            <Link to="/about" onClick={() => setIsMenuOpen(false)}>
+              About Us
+            </Link>
+          </li>
+          <li>
+            <Link to="/batteries" onClick={() => setIsMenuOpen(false)}>
+              Our Batteries
+            </Link>
+          </li>
+          <li>
+            <Link to="/support" onClick={() => setIsMenuOpen(false)}>
+              Support
+            </Link>
+          </li>
+          <li>
+            <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
+              Contact Us
+            </Link>
+          </li>
         </ul>
       </div>
-      
 
+      {/* Overlay */}
       {isMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={() => setIsMenuOpen(false)}
         ></div>
