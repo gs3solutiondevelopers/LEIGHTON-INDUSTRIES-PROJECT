@@ -53,7 +53,7 @@ const mockWarranty = [
 
 const AdminDashboardPage = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("contacts"); 
+  const [activeTab, setActiveTab] = useState("contacts");
 
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
@@ -190,7 +190,7 @@ const AdminDashboardPage = () => {
             </motion.div>
           )}
 
-          {activeTab == 'Warranty Claim' && (
+          {activeTab == "Warranty Claim" && (
             <motion.div
               key="complaints"
               initial={{ opacity: 0, y: 10 }}
