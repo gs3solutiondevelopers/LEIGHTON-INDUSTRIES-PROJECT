@@ -1,7 +1,9 @@
+
 import React, { useState } from "react";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
-import { batteryData } from "../data/ProductData.js";
+import { useLocation } from "react-router-dom";
+import { batteryData } from "../data/productData.js";
 import ProductCard from "../components/product/ProductCard";
 
 const categories = [
@@ -12,18 +14,22 @@ const categories = [
 ];
 
 const ProductsPage = () => {
-  const [activeCategory, setActiveCategory] = useState("e-rickshaw");
+  const location = useLocation();
+  const [activeCategory, setActiveCategory] = useState(
+    location.state?.defaultCategory || "e-rickshaw"
+  );
+
   const activeProducts = batteryData[activeCategory].products;
 
   return (
     <div className="bg-white">
-      <div className="relative h-72 md:h-96">
+      <div className="relative h-110">
         <img
           src={batteryData[activeCategory].bannerImage}
           alt={`${batteryData[activeCategory].title}`}
           className="absolute inset-0 w-full h-full object-cover z-0 transition-all duration-500"
         />
-        <div className="relative z-10  flex flex-col items-center justify-center bg-black/60 text-white text-center p-4 h-110">
+        <div className="relative z-10  flex flex-col items-center justify-center bg-black/60 text-white text-center p-4 h-full">
           <h1 className="text-4xl md:text-5xl font-bold">Our Batteries</h1>
           <p className="text-lg mt-4">
             Powering every journey with reliability and performance.
