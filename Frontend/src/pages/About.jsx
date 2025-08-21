@@ -25,28 +25,18 @@ const AboutPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-20 space-y-24">
-        <div className="text-center">
-          <h2 className="text-5xl font-bold text-brand-dark mb-6">Our <span className="text-lime-500">Story</span></h2>
-          <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
-            Founded in the heart of West Bengal, Leighton Industries was born
-            from a singular vision: to revolutionize the e-rickshaw industry
-            with power solutions that drivers can trust. We saw a critical need
-            for batteries that could withstand the demanding conditions of
-            Indian roads while providing consistent, long-lasting performance.
-            Driven by a commitment to innovation, quality, and sustainability,
-            we have dedicated ourselves to engineering and manufacturing
-            high-performance tubular batteries that not only empower the
-            livelihoods of thousands of drivers but also contribute to a
-            cleaner, greener future. Today, we are proud to be a leading name in
-            the e-rickshaw battery market, known for our unwavering reliability
-            and our dedication to the community we serve.
-          </p>
-        </div>
+  <div className="max-w-7xl mx-auto px-6 py-20 space-y-24">
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-4">
-            <h2 className="text-5xl font-bold text-brand-dark">Our <span className="text-lime-500">Mission</span></h2>
+  <div className="group bg-gray-50 rounded-lg shadow-lg hover:border-8 hover:border-lime-500 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 grid grid-cols-2 items-center">
+          <div className="h-full w-full flex items-center justify-center">
+            <img
+              src="https://call2recycle.ca/wp-content/uploads/2024/12/EV-Battery-Recovery-Image.jpg"
+              alt="Engineer working on a battery"
+              className="w-full h-full object-cover rounded-lg shadow-xl"
+            />
+          </div>
+          <div className="p-6 w-full space-y-4 text-center">
+            <h2 className="text-5xl font-bold text-brand-dark"><span className="text-lime-500">Mission</span></h2>
             <p className="text-gray-700 leading-relaxed text-lg">
               To lead the charge in providing reliable, high-performance, and
               eco-friendly battery solutions for the e-rickshaw industry. We are
@@ -55,25 +45,11 @@ const AboutPage = () => {
               sustainable future for transportation in India.
             </p>
           </div>
-          <div>
-            <img
-              src="https://call2recycle.ca/wp-content/uploads/2024/12/EV-Battery-Recovery-Image.jpg"
-              alt="Engineer working on a battery"
-              className="rounded-lg shadow-xl"
-            />
-          </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="order-last md:order-first">
-            <img
-              src="https://rmi.org/wp-content/uploads/2023/03/ev-battery-iStock-1393018046.jpg"
-              alt="Futuristic technology"
-              className="rounded-lg shadow-xl"
-            />
-          </div>
-          <div className="space-y-4">
-            <h2 className="text-5xl font-bold text-brand-dark">Our <span className="text-lime-500">Vision</span></h2>
+  <div className="group bg-gray-50 rounded-lg shadow-lg hover:border-8 hover:border-lime-500 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 grid grid-cols-2 items-center">
+          <div className="p-6 w-full space-y-4 text-center">
+            <h2 className="text-5xl font-bold text-brand-dark"><span className="text-lime-500">Vision</span></h2>
             <p className="text-gray-700 leading-relaxed text-lg">
               To be the most trusted and innovative power solutions provider in
               the electric vehicle sector, driving the future of mobility with
@@ -82,77 +58,56 @@ const AboutPage = () => {
               powers every journey.
             </p>
           </div>
+          <div className="h-full w-full flex items-center justify-center">
+            <img
+              src="https://rmi.org/wp-content/uploads/2023/03/ev-battery-iStock-1393018046.jpg"
+              alt="Futuristic technology"
+              className="w-full h-full object-cover rounded-lg shadow-xl"
+            />
+          </div>
         </div>
 
-        <div className="border-t pt-20 text-center">
+  <div className="pt-20 text-center">
           <h2 className="font-bold text-5xl mb-12">Our <span className="text-lime-500">Promise</span></h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="group bg-gray-50 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-              <img
-                src="https://www.automotivepowertraintechnologyinternational.com/wp-content/uploads/2023/05/P90505652_highRes_assembly-of-high-vol-scaled.jpg"
-                alt="Quality check"
-                className="w-full h-56 object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-brand-dark mb-2">
-                  Quality
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Every Leighton battery undergoes rigorous testing to meet the
-                  highest international standards.
-                </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className="group bg-white rounded-2xl shadow-xl border-t-8 border-lime-500 p-8 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105">
+              <div className="mb-6 w-full h-48 rounded-2xl border-4 border-lime-400 shadow-lg overflow-hidden flex items-center justify-center bg-white">
+                <img src="https://www.automotivepowertraintechnologyinternational.com/wp-content/uploads/2023/05/P90505652_highRes_assembly-of-high-vol-scaled.jpg" alt="EV Battery Quality" className="w-full h-full object-cover" />
               </div>
+              <h3 className="text-2xl font-bold text-lime-600 mb-2">Quality</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Every Leighton battery undergoes rigorous testing to meet the highest international standards.
+              </p>
             </div>
 
-            <div className="group bg-gray-50 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-              <img
-                src="https://eriks.co.uk/en/know-how-hub/blogs/tools-safety-maintenance/ansell-protect-ev-battery-manufacturing/_jcr_content/content_mainpar/section_1/par/blogimage.coreimg.jpeg/1735898720347/ansell-protect-ev-battery-manufacturing.jpeg"
-                alt="Manufacturing facility"
-                className="w-full h-56 object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-brand-dark mb-2">
-                  Manufacturing
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Our state-of-the-art facility uses cutting-edge technology to
-                  produce high-quality batteries at scale.
-                </p>
+            <div className="group bg-white rounded-2xl shadow-xl border-t-8 border-lime-500 p-8 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105">
+              <div className="mb-6 w-full h-48 rounded-2xl border-4 border-lime-400 shadow-lg overflow-hidden flex items-center justify-center bg-white">
+                <img src="https://eriks.co.uk/en/know-how-hub/blogs/tools-safety-maintenance/ansell-protect-ev-battery-manufacturing/_jcr_content/content_mainpar/section_1/par/blogimage.coreimg.jpeg/1735898720347/ansell-protect-ev-battery-manufacturing.jpeg" alt="EV Battery Manufacturing" className="w-full h-full object-cover" />
               </div>
+              <h3 className="text-2xl font-bold text-lime-600 mb-2">Manufacturing</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Our state-of-the-art facility uses cutting-edge technology to produce high-quality batteries at scale.
+              </p>
             </div>
 
-            <div className="group bg-gray-50 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-              <img
-                src="https://www.autoworldjournal.com/wp-content/uploads/2023/12/Gotion-Thailand_Battery-Manufacturing.jpg"
-                alt="Battery product range"
-                className="w-full h-56 object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-brand-dark mb-2">
-                  Product Range
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  We offer a comprehensive range of tubular batteries designed
-                  for the diverse needs of our customers.
-                </p>
+            <div className="group bg-white rounded-2xl shadow-xl border-t-8 border-lime-500 p-8 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105">
+              <div className="mb-6 w-full h-48 rounded-2xl border-4 border-lime-400 shadow-lg overflow-hidden flex items-center justify-center bg-white">
+                <img src="https://www.autoworldjournal.com/wp-content/uploads/2023/12/Gotion-Thailand_Battery-Manufacturing.jpg" alt="EV Battery Packs" className="w-full h-full object-cover" />
               </div>
+              <h3 className="text-2xl font-bold text-lime-600 mb-2">Product Range</h3>
+              <p className="text-gray-700 leading-relaxed">
+                We offer a comprehensive range of tubular batteries designed for the diverse needs of our customers.
+              </p>
             </div>
 
-            <div className="group bg-gray-50 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIlrzGM4C2GEdXM_jvhBilyh_sXDA96L5feOlBRVGjg9uyl2JRtg0c3MC1t6ksPemZeks&usqp=CAU"
-                alt="Safety inspection"
-                className="w-full h-56 object-cover"
-              />
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-brand-dark mb-2">
-                  Safety
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Our batteries are engineered with multiple safety features to
-                  ensure the well-being of our users.
-                </p>
+            <div className="group bg-white rounded-2xl shadow-xl border-t-8 border-lime-500 p-8 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105">
+              <div className="mb-6 w-full h-48 rounded-2xl border-4 border-lime-400 shadow-lg overflow-hidden flex items-center justify-center bg-white">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIlrzGM4C2GEdXM_jvhBilyh_sXDA96L5feOlBRVGjg9uyl2JRtg0c3MC1t6ksPemZeks&usqp=CAU" alt="EV Battery Safety" className="w-full h-full object-cover" />
               </div>
+              <h3 className="text-2xl font-bold text-lime-600 mb-2">Safety</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Our batteries are engineered with multiple safety features to ensure the well-being of our users.
+              </p>
             </div>
           </div>
         </div>

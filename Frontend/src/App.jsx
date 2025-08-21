@@ -19,10 +19,12 @@ import SuperAdminLogin from "./pages/SuperAdminLogin";
 import SuperDashboard from "./pages/SuperDashboard";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
+import {Toaster} from 'react-hot-toast'
 const App = () => {
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
+         <Toaster position="top-center" reverseOrder={false} />
         <Navbar />
         <main className="flex-grow">
           <Routes>

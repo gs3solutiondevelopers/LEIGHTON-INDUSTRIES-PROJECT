@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMail, FiMessageSquare, FiUpload, FiUserPlus } from "react-icons/fi";
+
 
 // --- MOCK DATA ---
 const mockContacts = [
@@ -168,8 +168,9 @@ const SuperDashboard = () => {
             Super Admin Dashboard
           </h1>
           <button
+            type="button"
             onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-700 cursor-pointer text-white font-bold py-2 px-6 rounded-md  transition-colors"
+            className="bg-red-500 text-white font-bold py-2 px-6 rounded-md hover:bg-red-600 cursor-pointer transition-colors relative z-100"
           >
             Logout
           </button>
