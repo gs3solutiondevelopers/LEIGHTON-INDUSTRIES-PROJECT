@@ -6,6 +6,7 @@ import { Contact } from '../models/contact.model.js';
 import { Warranty } from '../models/warranty.model.js';
 import { Complaint } from '../models/complaint.model.js';
 import { Dealer } from '../models/dealer.model.js';
+import { Product } from '../models/product.model.js';
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -84,5 +85,13 @@ const getDealers = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch dealers." });
   }
 };
+const getProducts = async (req, res) => {
+  try {
+    const products = await Product.find({}).sort({ createdAt: -1 });
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch products." });
+  }
+};
 
-export { loginAdmin, logoutAdmin, getComplaints, getContacts, getWarranties, getDealers };
+export { loginAdmin, logoutAdmin, getComplaints, getContacts, getWarranties, getDealers,getProducts };

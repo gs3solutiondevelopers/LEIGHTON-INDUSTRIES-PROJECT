@@ -7,53 +7,30 @@ const addproduct = async (req, res) => {
   try {
     const { name, description, specifications, features, category } = req.body;
     
-    if (!req.file) {
-      return res.status(400).json({ message: "Product image is required." });
+    // Check if files were uploaded
+    if (!req.files || !req.files.heroImage || !req.files.galleryImages) {
+      return res.status(400).json({ message: "Both hero and gallery images are required." });
     }
 
-    const imagePath = req.file.path;
+    const heroImagePath = req.files.heroImage[0].path;
+    const galleryImagePaths = req.files.galleryImages.map(file => file.path);
 
-    // --- THIS IS THE FIX ---
-    // Safely parse the JSON strings, providing default values if they are empty.
-    let parsedSpecifications = {};
-    if (specifications) {
-      try {
-        parsedSpecifications = JSON.parse(specifications);
-      } catch (e) {
-        return res.status(400).json({ message: "Invalid specifications format." });
-      }
-    }
-
-    let parsedFeatures = [];
-    if (features) {
-      try {
-        parsedFeatures = JSON.parse(features);
-      } catch (e) {
-        return res.status(400).json({ message: "Invalid features format." });
-      }
-    }
-    // --------------------
+    const parsedSpecifications = JSON.parse(specifications);
+    const parsedFeatures = JSON.parse(features);
 
     const newProduct = await Product.create({
       name,
       description,
       category,
-      specifications: {
-          capacity: parsedSpecifications.capacity || '',
-          warranty: parsedSpecifications.warranty || '',
-          type: parsedSpecifications.type || ''
-      },
+      specifications: parsedSpecifications,
       features: parsedFeatures,
-      imagePath: imagePath
+      heroImage: heroImagePath,
+      galleryImages: galleryImagePaths
     });
 
     res.status(201).json({ success: true, message: "Product added successfully.", data: newProduct });
   } catch (error) {
     console.error("Add Product Error:", error);
-    // Provide a more specific error message if validation fails
-    if (error.name === 'ValidationError') {
-      return res.status(400).json({ success: false, message: "Product validation failed.", details: error.errors });
-    }
     res.status(500).json({ success: false, message: "Failed to add product." });
   }
 };
@@ -84,4 +61,19 @@ const deleteDealer = async (req, res) => {
   }
 };
 
-export { addproduct , addDealer,deleteDealer };
+const deleteProduct = async (req,res)=>{
+  try {
+    const {id} = req.params;
+    const product = await Product.findByIdAndDelete(id);
+    if (!product) {
+      return res.status(404).json({success:false,message:"Product not found"});
+    }
+        res.status(200).json({ success: true, message: "Product deleted successfully." });
+
+  } catch (error) {
+    console.error("Delete Product Error",error);
+    res.status(500).json({success:false,message:"failed to delete product"});
+  }
+}
+
+export { addproduct , addDealer,deleteDealer,deleteProduct };

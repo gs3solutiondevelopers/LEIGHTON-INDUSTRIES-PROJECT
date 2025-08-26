@@ -11,6 +11,7 @@ import {
   FiUserPlus,
   FiShield,
   FiUsers,
+  FiPackage,
 } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -24,6 +25,7 @@ const SuperAdminDashboardPage = () => {
   const [complaints, setComplaints] = useState([]);
   const [warranties, setWarranties] = useState([]);
   const [dealers, setDealers] = useState([]);
+  const [products, setProducts] = useState([]);
 
   const {
     register: registerProduct,
@@ -47,30 +49,40 @@ const SuperAdminDashboardPage = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       try {
-        const [contactsRes, complaintsRes, warrantiesRes, dealersRes] =
-          await Promise.all([
-            axios.get(
-              `${import.meta.env.VITE_API_URL}/api/v1/admin/contacts`,
-              config
-            ),
-            axios.get(
-              `${import.meta.env.VITE_API_URL}/api/v1/admin/complaints`,
-              config
-            ),
-            axios.get(
-              `${import.meta.env.VITE_API_URL}/api/v1/admin/warranties`,
-              config
-            ),
-            axios.get(
-              `${import.meta.env.VITE_API_URL}/api/v1/admin/dealers`,
-              config
-            ),
-          ]);
+        const [
+          contactsRes,
+          complaintsRes,
+          warrantiesRes,
+          dealersRes,
+          productsRes,
+        ] = await Promise.all([
+          axios.get(
+            `${import.meta.env.VITE_API_URL}/api/v1/admin/contacts`,
+            config
+          ),
+          axios.get(
+            `${import.meta.env.VITE_API_URL}/api/v1/admin/complaints`,
+            config
+          ),
+          axios.get(
+            `${import.meta.env.VITE_API_URL}/api/v1/admin/warranties`,
+            config
+          ),
+          axios.get(
+            `${import.meta.env.VITE_API_URL}/api/v1/admin/dealers`,
+            config
+          ),
+          axios.get(
+            `${import.meta.env.VITE_API_URL}/api/v1/admin/products`,
+            config
+          ), // Fetch products
+        ]);
 
         setContacts(contactsRes.data);
         setComplaints(complaintsRes.data);
         setWarranties(warrantiesRes.data);
         setDealers(dealersRes.data);
+        setProducts(productsRes.data);
       } catch (error) {
         console.error("Failed to fetch data", error);
         localStorage.removeItem("superAdminToken");
@@ -86,11 +98,13 @@ const SuperAdminDashboardPage = () => {
     navigate("/super-admin-login");
   };
 
-    const handleDeleteDealer = (dealerId) => {
+  const handleDeleteDealer = (dealerId) => {
     toast(
       (t) => (
         <div className="flex flex-col items-center p-4">
-          <p className="font-semibold mb-3">Are you sure you want to delete this dealer?</p>
+          <p className="font-semibold mb-3">
+            Are you sure you want to delete this dealer?
+          </p>
           <div className="flex space-x-4">
             <button
               className="bg-red-500 text-white px-4 py-2 rounded-md font-bold hover:bg-red-600"
@@ -123,11 +137,15 @@ const SuperAdminDashboardPage = () => {
       const token = localStorage.getItem("superAdminToken");
       const config = { headers: { Authorization: `Bearer ${token}` } };
       await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/v1/super-admin/dealers/${dealerId}`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/v1/super-admin/dealers/${dealerId}`,
         config
       );
       // Use functional update to correctly remove the dealer from state
-      setDealers((prevDealers) => prevDealers.filter((d) => d._id !== dealerId));
+      setDealers((prevDealers) =>
+        prevDealers.filter((d) => d._id !== dealerId)
+      );
       toast.success("Dealer deleted successfully!", { id: toastId });
     } catch (error) {
       toast.error("Failed to delete dealer.", { id: toastId });
@@ -153,7 +171,13 @@ const SuperAdminDashboardPage = () => {
       "features",
       JSON.stringify(data.features.split(",").map((f) => f.trim()))
     );
-    formData.append("image", data.image[0]);
+
+    // Append the single hero image
+    formData.append("heroImage", data.heroImage[0]);
+
+    for (let i = 0; i < data.galleryImages.length; i++) {
+      formData.append("galleryImages", data.galleryImages[i]);
+    }
 
     try {
       const token = localStorage.getItem("superAdminToken");
@@ -195,6 +219,57 @@ const SuperAdminDashboardPage = () => {
     } catch (error) {
       toast.error("Failed to add dealer.", { id: toastId });
       console.error("Add dealer error:", error);
+    }
+  };
+
+  const handleDeleteProduct = async (productId) => {
+    toast(
+      (t) => (
+        <div className="flex flex-col items-center p-4">
+          <p className="font-semibold mb-3">
+            Are you sure you want to delete this product?
+          </p>
+          <div className="flex space-x-4">
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded-md font-bold hover:bg-red-600"
+              onClick={() => {
+                toast.dismiss(t.id);
+                confirmDeleteProduct(productId);
+              }}
+            >
+              Delete
+            </button>
+            <button
+              className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400"
+              onClick={() => toast.dismiss(t.id)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 6000 }
+    );
+  };
+
+  const confirmDeleteProduct = async (productId) => {
+    const toastId = toast.loading("Deleting product...");
+    try {
+      const token = localStorage.getItem("superAdminToken");
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      await axios.delete(
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/v1/super-admin/products/${productId}`,
+        config
+      );
+      setProducts((prevProducts) =>
+        prevProducts.filter((p) => p._id !== productId)
+      );
+      toast.success("Product deleted successfully!", { id: toastId });
+    } catch (error) {
+      toast.error("Failed to delete product.", { id: toastId });
+      console.error("Delete product error:", error);
     }
   };
 
@@ -265,6 +340,17 @@ const SuperAdminDashboardPage = () => {
           >
             <FiUpload /> <span>Upload Product</span>
           </button>
+          <button
+            onClick={() => setActiveTab("viewProducts")}
+            className={`flex items-center space-x-2 py-3 px-6 text-lg font-semibold ${
+              activeTab === "viewProducts"
+                ? "border-b-2 border-lime-500 text-lime-600"
+                : "text-gray-500 hover:text-lime-500"
+            }`}
+          >
+            <FiPackage /> <span>View Products</span>
+          </button>
+
           <button
             onClick={() => setActiveTab("addDealer")}
             className={`flex items-center space-x-2 py-3 px-6 text-lg font-semibold ${
@@ -420,76 +506,146 @@ const SuperAdminDashboardPage = () => {
             >
               <div className="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
                 <h2 className="text-2xl font-semibold mb-6">Add New Product</h2>
+                {/* --- THIS IS THE CORRECTED FORM STRUCTURE --- */}
                 <form
                   onSubmit={handleSubmitProduct(onProductSubmit)}
-                  className="space-y-4"
+                  className="space-y-6"
                 >
-                  <label>Product Name</label>
-                  <input
-                    type="text"
-                    {...registerProduct("name")}
-                    className="w-full p-2 border rounded"
-                  />
-                  <label>Category</label>
-                  <select
-                    {...registerProduct("category")}
-                    className="w-full p-2 border rounded bg-white"
-                  >
-                    <option value="e-rickshaw">E-Rickshaw</option>
-                    <option value="four-wheelers">Four Wheelers</option>
-                    <option value="home-segment">Home Segment</option>
-                    <option value="commercial-vehicles">
-                      Commercial Vehicles
-                    </option>
-                  </select>
-                  <label>Description</label>
-                  <textarea
-                    {...registerProduct("description")}
-                    className="w-full p-2 border rounded"
-                  ></textarea>
-                  <label>Specifications (Capacity, Warranty, Type)</label>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Product Name
+                    </label>
                     <input
                       type="text"
-                      {...registerProduct("capacity")}
-                      placeholder="e.g., 150 Ah"
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      type="text"
-                      {...registerProduct("warranty")}
-                      placeholder="e.g., 18 Months"
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      type="text"
-                      {...registerProduct("type")}
-                      placeholder="e.g., Tubular"
-                      className="w-full p-2 border rounded"
+                      {...registerProduct("name")}
+                      className="mt-1 w-full p-2 border rounded-md"
                     />
                   </div>
-                  <label>Features (comma-separated)</label>
-                  <input
-                    type="text"
-                    {...registerProduct("features")}
-                    className="w-full p-2 border rounded"
-                  />
-                  <label>Image</label>
-                  <input
-                    type="file"
-                    {...registerProduct("image")}
-                    className="w-full p-2 border rounded"
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Category
+                    </label>
+                    <select
+                      {...registerProduct("category")}
+                      className="mt-1 w-full p-2 border rounded-md bg-white"
+                    >
+                      <option value="e-rickshaw">E-Rickshaw</option>
+                      <option value="four-wheelers">Four Wheelers</option>
+                      <option value="home-segment">Home Segment</option>
+                      <option value="commercial-vehicles">
+                        Commercial Vehicles
+                      </option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Description
+                    </label>
+                    <textarea
+                      {...registerProduct("description")}
+                      className="mt-1 w-full p-2 border rounded-md"
+                    ></textarea>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Specifications
+                    </label>
+                    <div className="grid grid-cols-3 gap-4 mt-1">
+                      <input
+                        type="text"
+                        {...registerProduct("capacity")}
+                        placeholder="e.g., 150 Ah"
+                        className="w-full p-2 border rounded-md"
+                      />
+                      <input
+                        type="text"
+                        {...registerProduct("warranty")}
+                        placeholder="e.g., 18 Months"
+                        className="w-full p-2 border rounded-md"
+                      />
+                      <input
+                        type="text"
+                        {...registerProduct("type")}
+                        placeholder="e.g., Tubular"
+                        className="w-full p-2 border rounded-md"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Features (comma-separated)
+                    </label>
+                    <input
+                      type="text"
+                      {...registerProduct("features")}
+                      className="mt-1 w-full p-2 border rounded-md"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Hero Image (Main View)
+                    </label>
+                    <input
+                      type="file"
+                      {...registerProduct("heroImage")}
+                      className="mt-1 w-full p-2 border rounded-md"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Gallery Images (Side, Top, Back - up to 3)
+                    </label>
+                    <input
+                      type="file"
+                      {...registerProduct("galleryImages")}
+                      className="mt-1 w-full p-2 border rounded-md"
+                      multiple
+                    />
+                  </div>
                   <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white font-bold py-3 rounded"
+                    className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-blue-600"
                   >
                     Upload Product
                   </button>
                 </form>
+                {/* ------------------------------------------- */}
               </div>
             </motion.div>
           )}
+
+          {activeTab === 'viewProducts' && (
+            <motion.div key="viewProducts" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <table className="min-w-full">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2 border">Name</th>
+                      <th className="px-4 py-2 border">Category</th>
+                      <th className="px-4 py-2 border">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map((p) => (
+                      <tr key={p._id}>
+                        <td className="px-4 py-2 border">{p.name}</td>
+                        <td className="px-4 py-2 border">{p.category}</td>
+                        <td className="px-4 py-2 border text-center">
+                          <button 
+                            onClick={() => handleDeleteProduct(p._id)}
+                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === "addDealer" && (
             <motion.div
               key="addDealer"
@@ -544,7 +700,7 @@ const SuperAdminDashboardPage = () => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white font-bold py-3 rounded"
+                    className="w-full bg-lime-500 text-white font-bold py-3 rounded"
                   >
                     Add Dealer
                   </button>

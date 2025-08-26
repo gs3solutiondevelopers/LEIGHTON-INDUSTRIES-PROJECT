@@ -44,5 +44,30 @@ const getAllProducts = async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch products." });
     }
 };
+const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
 
-export { getAllProducts };
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found." });
+    }
+
+    // Construct the image array for the slider
+    const productDataWithSlider = {
+      ...product.toObject(),
+      sliderImages: [
+        product.imagePath, // Main image (Front View)
+        'https://placehold.co/600x400/e2e8f0/4a5568?text=Side+View',
+        'https://placehold.co/600x400/e2e8f0/4a5568?text=Back+View',
+        'https://placehold.co/600x400/e2e8f0/4a5568?text=Top+View',
+      ]
+    };
+    
+    res.status(200).json({ success: true, data: productDataWithSlider });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to fetch product details." });
+  }
+};
+
+export { getAllProducts,getProductById };
