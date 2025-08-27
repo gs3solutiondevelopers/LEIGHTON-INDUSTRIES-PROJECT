@@ -1,21 +1,35 @@
-
+// src/pages/ContactPage.jsx
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ContactPage = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   
-  const onSubmit = (data) => {
-    
-    console.log(data);
-    alert('Thank you for your message! We will get back to you soon.');
+  const onSubmit = async (data) => {
+    const toastId = toast.loading("Sending your message...");
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/forms/contact`, data);
+
+      if (response.data.success) {
+        toast.success('Message sent successfully!', { id: toastId });
+        reset();
+      } else {
+        
+        toast.error(response.data.message || 'Failed to send message.', { id: toastId });
+      }
+    } catch (error) {
+      
+      toast.error('Failed to connect to the server. Please try again.', { id: toastId });
+      console.error("Contact form error:", error);
+    }
   };
 
   return (
     <div className="bg-gray-50">
-
       <div className="relative h-104">
         <img 
           src="https://t4.ftcdn.net/jpg/05/24/03/99/360_F_524039911_SJfffOLKTk1HZvTPyF9vv1FN6oCipyVi.jpg" 
@@ -27,16 +41,12 @@ const ContactPage = () => {
           <p className="text-lg mt-4">We'd love to hear from you. Please fill out the form below.</p>
         </div>
       </div>
-
-  
+ 
       <div className="max-w-7xl mx-auto px-6 py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-start">
-          
-
           <div className="space-y-8">
             <h2 className="text-3xl font-semibold text-brand-dark mb-6">Contact Information</h2>
             
-
             <div className="flex items-start space-x-4 bg-white p-6 rounded-lg shadow-sm">
               <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
                 <FiMapPin className="h-6 w-6 text-green-600" />
@@ -46,7 +56,6 @@ const ContactPage = () => {
                 <p className="text-gray-600">near sanko, Dafarpur, West Bengal 742187</p>
               </div>
             </div>
-
 
             <div className="flex items-start space-x-4 bg-white p-6 rounded-lg shadow-sm">
               <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -58,7 +67,6 @@ const ContactPage = () => {
               </div>
             </div>
 
-
             <div className="flex items-start space-x-4 bg-white p-6 rounded-lg shadow-sm">
               <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
                 <FiMail className="h-6 w-6 text-green-600" />
@@ -69,7 +77,6 @@ const ContactPage = () => {
               </div>
             </div>
           </div>
-
 
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-3xl font-semibold text-brand-dark mb-6">Send us a Message</h2>
@@ -117,7 +124,6 @@ const ContactPage = () => {
               </div>
             </form>
           </div>
-
         </div>
       </div>
     </div>

@@ -13,10 +13,18 @@ import Complaint from "./pages/Complaint";
 import Dealer from "./pages/Dealer";
 import ProductDetails from "./pages/ProductDetails";
 import Terms from "./pages/Terms";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminLogin from "./pages/AdminLogin";
+import SuperAdminLogin from "./pages/SuperAdminLogin";
+import SuperDashboard from "./pages/SuperDashboard";
+import About from "./pages/About";
+import Privacy from "./pages/Privacy";
+import {Toaster} from 'react-hot-toast'
 const App = () => {
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
+         <Toaster position="top-center" reverseOrder={false} />
         <Navbar />
         <main className="flex-grow">
           <Routes>
@@ -27,13 +35,22 @@ const App = () => {
               path="/batteries/:category/:productId"
               element={<ProductDetails />}
             />
+            <Route path="/about" element={<About />} />
+
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/support" element={<SupportPage />} />
             <Route path="/terms-conditions" element={<Terms />} />
+            <Route path="/privacy-policy" element={<Privacy/>}/>
             {/* supprt routes */}
             <Route path="/support/warranty" element={<WarrantyPage />} />
             <Route path="/support/complaint" element={<Complaint />} />
             <Route path="/support/dealer" element={<Dealer />} />
+
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+            <Route path="/super-admin-login" element={<SuperAdminLogin />} />
+            <Route path="/super-admin/dashboard" element={<SuperDashboard />} />
           </Routes>
         </main>
         <Footer />

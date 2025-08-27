@@ -2,8 +2,7 @@
 
 import banner from '../assets/banner.png';
 import banner2 from '../assets/banner2.png';
-import banner3 from '../assets/banner3.png';
-import banner4 from '../assets/banner4.png';
+
 
 export const batteryData = {
   'e-rickshaw': {
@@ -11,8 +10,8 @@ export const batteryData = {
     description: 'Our specialty. High-performance batteries engineered for the demands of daily e-rickshaw use.',
     bannerImage: banner,
     products: [
-      { id: 'leighton-pro-1500', name: 'Leighton Tubular Pro 1500', image: 'https://5.imimg.com/data5/SELLER/Default/2022/11/YW/YY/QT/54595945/amaron-e-rickshaw-battery-250x250.jpg', description: 'The workhorse of our lineup, offering a perfect balance of long life and consistent power.' },
-      { id: 'leighton-powermax-1600', name: 'Leighton PowerMax 1600', image: 'https://5.imimg.com/data5/SELLER/Default/2024/4/410499334/CD/WE/PH/30892196/amaron-current-er2500t12-e-rickshaw-battery-500x500.jpg', description: 'Our premium offering with maximum capacity and an extended warranty for heavy-duty usage.' },
+      { id: 'leighton-pro-1500', name: 'Leighton Tubular Pro 1500', image: 'https://5.imimg.com/data5/FS/VJ/XU/SELLER-2825475/amaron-automotive-battery-500x500.png', description: 'The workhorse of our lineup, offering a perfect balance of long life and consistent power.' },
+      { id: 'leighton-powermax-1600', name: 'Leighton PowerMax 1600', image: 'https://5.imimg.com/data5/CI/VO/MY-44971723/luminous-tubular-battery-500x500.jpg', description: 'Our premium offering with maximum capacity and an extended warranty for heavy-duty usage.' },
     ]
   },
   'four-wheelers': {
@@ -26,17 +25,17 @@ export const batteryData = {
   'home-segment': {
     title: 'Home Segment (Inverters)',
     description: 'Keep your home powered during outages with our long-lasting and efficient inverter batteries.',
-    bannerImage: banner3,
+    bannerImage: banner,
     products: [
-      { id: 'leighton-inverter-2000', name: 'Leighton HomePower 2000', image: 'https://amaron-prod-images.s3.ap-south-1.amazonaws.com/styles/product_detail_img_450x350/s3/product-topview-image/AAM-HR-NT600H29R-%282%29.jpg?itok=fJlOY0Lp', description: 'High-capacity tubular battery for extended backup and superior performance.' },
+      { id: 'leighton-inverter-2000', name: 'Leighton HomePower 2000', image: 'https://battery4u.in/wp-content/uploads/2019/02/Amaron-42B20L-4.png', description: 'High-capacity tubular battery for extended backup and superior performance.' },
     ]
   },
   'commercial-vehicles': {
     title: 'Commercial Vehicle Batteries',
     description: 'Heavy-duty batteries built to withstand the long journeys and tough conditions of commercial use.',
-    bannerImage: banner4,
+    bannerImage: banner,
     products: [
-      { id: 'leighton-truck-5000', name: 'Leighton HaulMaster 5000', image: 'https://5.imimg.com/data5/SELLER/Default/2022/11/EH/BP/OV/24761701/amaron-hi-way-heavy-duty-battery-500x500.jpg', description: 'Maximum durability and high cranking power for trucks and heavy vehicles.' },
+      { id: 'leighton-truck-5000', name: 'Leighton HaulMaster 5000', image: 'https://batterymall.in/admin/upload/listing/1685176037AAM-HW-HC620D31R-0-1.jpg', description: 'Maximum durability and high cranking power for trucks and heavy vehicles.' },
     ]
   }
 };
