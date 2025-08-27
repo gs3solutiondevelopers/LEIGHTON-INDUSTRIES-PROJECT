@@ -1,4 +1,3 @@
-// src/middlewares/multer.middleware.js
 import multer from 'multer';
 
 const storage = multer.diskStorage({
@@ -11,7 +10,7 @@ const storage = multer.diskStorage({
   }
 });
 
-// Use upload.fields() to handle multiple file inputs
+
 export const upload = multer({ 
   storage: storage 
 });
