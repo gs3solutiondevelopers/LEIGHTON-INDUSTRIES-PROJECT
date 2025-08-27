@@ -1,10 +1,9 @@
-// src/pages/ProductComplaintPage.jsx
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import complaint from '../assets/complaint.png';
-import axios from 'axios'; // 1. Import axios
-import toast from 'react-hot-toast'; // 2. Import toast
+import axios from 'axios'; 
+import toast from 'react-hot-toast'; 
 
 const ProductComplaintPage = () => {
 

@@ -1,4 +1,3 @@
-// src/pages/SuperAdminDashboardPage.jsx
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -75,7 +74,7 @@ const SuperAdminDashboardPage = () => {
           axios.get(
             `${import.meta.env.VITE_API_URL}/api/v1/admin/products`,
             config
-          ), // Fetch products
+          ), 
         ]);
 
         setContacts(contactsRes.data);

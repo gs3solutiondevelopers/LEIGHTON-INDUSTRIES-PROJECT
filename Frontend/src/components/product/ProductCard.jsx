@@ -1,15 +1,12 @@
-// src/components/products/ProductCard.jsx
 
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 const ProductCard = ({ product, categoryKey }) => {
-  // --- THIS IS THE FIX ---
-  // Use the correct property 'heroImage' and add a check to prevent errors
+  
   const imageUrl = product.heroImage 
     ? `${import.meta.env.VITE_API_URL}/${product.heroImage.replace(/public[\\/]/, '')}`
-    : 'https://placehold.co/600x400?text=No+Image'; // Fallback image
-  // -------------------------
+    : 'https://placehold.co/600x400?text=No+Image'; 
 
   return (
     <div className="group bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 flex flex-col">
