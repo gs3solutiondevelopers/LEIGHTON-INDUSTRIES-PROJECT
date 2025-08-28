@@ -1,5 +1,6 @@
+// src/pages/SuperAdminDashboardPage.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,15 +17,40 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+// --- Reusable Pagination Component ---
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  if (totalPages <= 1) return null;
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  return (
+    <div className="flex justify-center items-center space-x-2 mt-6">
+      {pages.map((page) => (
+        <button
+          key={page}
+          onClick={() => onPageChange(page)}
+          className={`px-4 py-2 rounded-md text-sm font-semibold ${
+            currentPage === page
+              ? "bg-lime-500 text-white"
+              : "bg-gray-200 hover:bg-gray-300"
+          }`}
+        >
+          {page}
+        </button>
+      ))}
+    </div>
+  );
+};
+
 const SuperAdminDashboardPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("contacts");
 
-  const [contacts, setContacts] = useState([]);
-  const [complaints, setComplaints] = useState([]);
-  const [warranties, setWarranties] = useState([]);
-  const [dealers, setDealers] = useState([]);
-  const [products, setProducts] = useState([]);
+  const [data, setData] = useState({
+    contacts: { items: [], currentPage: 1, totalPages: 1 },
+    complaints: { items: [], currentPage: 1, totalPages: 1 },
+    warranties: { items: [], currentPage: 1, totalPages: 1 },
+    dealers: { items: [], currentPage: 1, totalPages: 1 },
+    products: { items: [], currentPage: 1, totalPages: 1 },
+  });
 
   const {
     register: registerProduct,
@@ -37,60 +63,55 @@ const SuperAdminDashboardPage = () => {
     reset: resetDealer,
   } = useForm();
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchDataForTab = useCallback(
+    async (tabKey, page = 1) => {
       const token = localStorage.getItem("superAdminToken");
       if (!token) {
         navigate("/super-admin-login");
         return;
       }
-
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
+      const endpointMap = {
+        contacts: "contacts",
+        complaints: "complaints",
+        warranties: "warranties",
+        viewDealers: "dealers",
+        viewProducts: "products",
+      };
+      const endpoint = endpointMap[tabKey];
+      if (!endpoint) return;
+
       try {
-        const [
-          contactsRes,
-          complaintsRes,
-          warrantiesRes,
-          dealersRes,
-          productsRes,
-        ] = await Promise.all([
-          axios.get(
-            `${import.meta.env.VITE_API_URL}/api/v1/admin/contacts`,
-            config
-          ),
-          axios.get(
-            `${import.meta.env.VITE_API_URL}/api/v1/admin/complaints`,
-            config
-          ),
-          axios.get(
-            `${import.meta.env.VITE_API_URL}/api/v1/admin/warranties`,
-            config
-          ),
-          axios.get(
-            `${import.meta.env.VITE_API_URL}/api/v1/admin/dealers`,
-            config
-          ),
-          axios.get(
-            `${import.meta.env.VITE_API_URL}/api/v1/admin/products`,
-            config
-          ), 
-        ]);
-
-        setContacts(contactsRes.data);
-        setComplaints(complaintsRes.data);
-        setWarranties(warrantiesRes.data);
-        setDealers(dealersRes.data);
-        setProducts(productsRes.data);
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_API_URL
+          }/api/v1/admin/${endpoint}?page=${page}`,
+          config
+        );
+        setData((prevData) => ({
+          ...prevData,
+          [endpoint]: {
+            items: response.data.data,
+            currentPage: response.data.currentPage,
+            totalPages: response.data.totalPages,
+          },
+        }));
       } catch (error) {
-        console.error("Failed to fetch data", error);
-        localStorage.removeItem("superAdminToken");
-        navigate("/super-admin-login");
+        console.error(`Failed to fetch ${endpoint}`, error);
+        toast.error(`Could not load ${endpoint}.`);
       }
-    };
+    },
+    [navigate]
+  );
 
-    fetchData();
-  }, [navigate]);
+  useEffect(() => {
+    fetchDataForTab(activeTab);
+  }, [activeTab, fetchDataForTab]);
+
+  const handlePageChange = (tabKey, page) => {
+    fetchDataForTab(tabKey, page);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("superAdminToken");
@@ -109,7 +130,7 @@ const SuperAdminDashboardPage = () => {
               className="bg-red-500 text-white px-4 py-2 rounded-md font-bold hover:bg-red-600"
               onClick={() => {
                 toast.dismiss(t.id);
-                confirmDelete(dealerId); // Call the delete function on confirm
+                confirmDelete(dealerId);
               }}
             >
               Delete
@@ -124,12 +145,11 @@ const SuperAdminDashboardPage = () => {
         </div>
       ),
       {
-        duration: 6000, // The toast will stay longer to allow for a decision
+        duration: 6000,
       }
     );
   };
 
-  // This new helper function contains the actual deletion logic
   const confirmDelete = async (dealerId) => {
     const toastId = toast.loading("Deleting dealer...");
     try {
@@ -141,10 +161,7 @@ const SuperAdminDashboardPage = () => {
         }/api/v1/super-admin/dealers/${dealerId}`,
         config
       );
-      // Use functional update to correctly remove the dealer from state
-      setDealers((prevDealers) =>
-        prevDealers.filter((d) => d._id !== dealerId)
-      );
+      fetchDataForTab("viewDealers", data.dealers.currentPage);
       toast.success("Dealer deleted successfully!", { id: toastId });
     } catch (error) {
       toast.error("Failed to delete dealer.", { id: toastId });
@@ -170,10 +187,7 @@ const SuperAdminDashboardPage = () => {
       "features",
       JSON.stringify(data.features.split(",").map((f) => f.trim()))
     );
-
-    // Append the single hero image
     formData.append("heroImage", data.heroImage[0]);
-
     for (let i = 0; i < data.galleryImages.length; i++) {
       formData.append("galleryImages", data.galleryImages[i]);
     }
@@ -262,9 +276,7 @@ const SuperAdminDashboardPage = () => {
         }/api/v1/super-admin/products/${productId}`,
         config
       );
-      setProducts((prevProducts) =>
-        prevProducts.filter((p) => p._id !== productId)
-      );
+      fetchDataForTab("viewProducts", data.products.currentPage);
       toast.success("Product deleted successfully!", { id: toastId });
     } catch (error) {
       toast.error("Failed to delete product.", { id: toastId });
@@ -330,16 +342,6 @@ const SuperAdminDashboardPage = () => {
             <FiUsers /> <span>View Dealers</span>
           </button>
           <button
-            onClick={() => setActiveTab("uploadProduct")}
-            className={`flex items-center space-x-2 py-3 px-6 text-lg font-semibold ${
-              activeTab === "uploadProduct"
-                ? "border-b-2 border-lime-500 text-lime-600"
-                : "text-gray-500 hover:text-lime-500"
-            }`}
-          >
-            <FiUpload /> <span>Upload Product</span>
-          </button>
-          <button
             onClick={() => setActiveTab("viewProducts")}
             className={`flex items-center space-x-2 py-3 px-6 text-lg font-semibold ${
               activeTab === "viewProducts"
@@ -349,7 +351,16 @@ const SuperAdminDashboardPage = () => {
           >
             <FiPackage /> <span>View Products</span>
           </button>
-
+          <button
+            onClick={() => setActiveTab("uploadProduct")}
+            className={`flex items-center space-x-2 py-3 px-6 text-lg font-semibold ${
+              activeTab === "uploadProduct"
+                ? "border-b-2 border-lime-500 text-lime-600"
+                : "text-gray-500 hover:text-lime-500"
+            }`}
+          >
+            <FiUpload /> <span>Upload Product</span>
+          </button>
           <button
             onClick={() => setActiveTab("addDealer")}
             className={`flex items-center space-x-2 py-3 px-6 text-lg font-semibold ${
@@ -362,8 +373,8 @@ const SuperAdminDashboardPage = () => {
           </button>
         </div>
 
-        {/* Tab Content */}
         <AnimatePresence mode="wait">
+          {/* Contacts Tab */}
           {activeTab === "contacts" && (
             <motion.div
               key="contacts"
@@ -371,7 +382,7 @@ const SuperAdminDashboardPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
-              <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
                 <table className="min-w-full">
                   <thead>
                     <tr>
@@ -381,7 +392,7 @@ const SuperAdminDashboardPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {contacts.map((c) => (
+                    {data.contacts.items.map((c) => (
                       <tr key={c._id}>
                         <td className="px-4 py-2 border">{c.name}</td>
                         <td className="px-4 py-2 border">{c.email}</td>
@@ -390,9 +401,16 @@ const SuperAdminDashboardPage = () => {
                     ))}
                   </tbody>
                 </table>
+                <Pagination
+                  currentPage={data.contacts.currentPage}
+                  totalPages={data.contacts.totalPages}
+                  onPageChange={(page) => handlePageChange("contacts", page)}
+                />
               </div>
             </motion.div>
           )}
+
+          {/* Complaints Tab */}
           {activeTab === "complaints" && (
             <motion.div
               key="complaints"
@@ -400,7 +418,7 @@ const SuperAdminDashboardPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
-              <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
                 <table className="min-w-full">
                   <thead>
                     <tr>
@@ -411,7 +429,7 @@ const SuperAdminDashboardPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {complaints.map((c) => (
+                    {data.complaints.items.map((c) => (
                       <tr key={c._id}>
                         <td className="px-4 py-2 border">{c.name}</td>
                         <td className="px-4 py-2 border">{c.phone}</td>
@@ -421,9 +439,16 @@ const SuperAdminDashboardPage = () => {
                     ))}
                   </tbody>
                 </table>
+                <Pagination
+                  currentPage={data.complaints.currentPage}
+                  totalPages={data.complaints.totalPages}
+                  onPageChange={(page) => handlePageChange("complaints", page)}
+                />
               </div>
             </motion.div>
           )}
+
+          {/* Warranties Tab */}
           {activeTab === "warranties" && (
             <motion.div
               key="warranties"
@@ -431,7 +456,7 @@ const SuperAdminDashboardPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
-              <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
                 <table className="min-w-full">
                   <thead>
                     <tr>
@@ -442,7 +467,7 @@ const SuperAdminDashboardPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {warranties.map((c) => (
+                    {data.warranties.items.map((c) => (
                       <tr key={c._id}>
                         <td className="px-4 py-2 border">{c.name}</td>
                         <td className="px-4 py-2 border">{c.phone}</td>
@@ -452,6 +477,11 @@ const SuperAdminDashboardPage = () => {
                     ))}
                   </tbody>
                 </table>
+                <Pagination
+                  currentPage={data.warranties.currentPage}
+                  totalPages={data.warranties.totalPages}
+                  onPageChange={(page) => handlePageChange("warranties", page)}
+                />
               </div>
             </motion.div>
           )}
@@ -464,7 +494,7 @@ const SuperAdminDashboardPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
-              <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
                 <table className="min-w-full">
                   <thead>
                     <tr>
@@ -475,7 +505,7 @@ const SuperAdminDashboardPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {dealers.map((d) => (
+                    {data.dealers.items.map((d) => (
                       <tr key={d._id}>
                         <td className="px-4 py-2 border">{d.name}</td>
                         <td className="px-4 py-2 border">{d.address}</td>
@@ -492,10 +522,61 @@ const SuperAdminDashboardPage = () => {
                     ))}
                   </tbody>
                 </table>
+                <Pagination
+                  currentPage={data.dealers.currentPage}
+                  totalPages={data.dealers.totalPages}
+                  onPageChange={(page) => handlePageChange("viewDealers", page)}
+                />
               </div>
             </motion.div>
           )}
 
+          {/* View Products Tab */}
+          {activeTab === "viewProducts" && (
+            <motion.div
+              key="viewProducts"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+                <table className="min-w-full">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2 border">Name</th>
+                      <th className="px-4 py-2 border">Category</th>
+                      <th className="px-4 py-2 border">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.products.items.map((p) => (
+                      <tr key={p._id}>
+                        <td className="px-4 py-2 border">{p.name}</td>
+                        <td className="px-4 py-2 border">{p.category}</td>
+                        <td className="px-4 py-2 border text-center">
+                          <button
+                            onClick={() => handleDeleteProduct(p._id)}
+                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <Pagination
+                  currentPage={data.products.currentPage}
+                  totalPages={data.products.totalPages}
+                  onPageChange={(page) =>
+                    handlePageChange("viewProducts", page)
+                  }
+                />
+              </div>
+            </motion.div>
+          )}
+
+          {/* Upload Product and Add Dealer Forms */}
           {activeTab === "uploadProduct" && (
             <motion.div
               key="uploadProduct"
@@ -505,7 +586,6 @@ const SuperAdminDashboardPage = () => {
             >
               <div className="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
                 <h2 className="text-2xl font-semibold mb-6">Add New Product</h2>
-                {/* --- THIS IS THE CORRECTED FORM STRUCTURE --- */}
                 <form
                   onSubmit={handleSubmitProduct(onProductSubmit)}
                   className="space-y-6"
@@ -608,43 +688,9 @@ const SuperAdminDashboardPage = () => {
                     Upload Product
                   </button>
                 </form>
-                {/* ------------------------------------------- */}
               </div>
             </motion.div>
           )}
-
-          {activeTab === 'viewProducts' && (
-            <motion.div key="viewProducts" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <table className="min-w-full">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-2 border">Name</th>
-                      <th className="px-4 py-2 border">Category</th>
-                      <th className="px-4 py-2 border">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {products.map((p) => (
-                      <tr key={p._id}>
-                        <td className="px-4 py-2 border">{p.name}</td>
-                        <td className="px-4 py-2 border">{p.category}</td>
-                        <td className="px-4 py-2 border text-center">
-                          <button 
-                            onClick={() => handleDeleteProduct(p._id)}
-                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </motion.div>
-          )}
-
           {activeTab === "addDealer" && (
             <motion.div
               key="addDealer"
@@ -658,48 +704,68 @@ const SuperAdminDashboardPage = () => {
                   onSubmit={handleSubmitDealer(onDealerSubmit)}
                   className="space-y-4"
                 >
-                  <label>Dealer Name</label>
-                  <input
-                    type="text"
-                    {...registerDealer("name")}
-                    className="w-full p-2 border rounded"
-                  />
-                  <label>Address</label>
-                  <input
-                    type="text"
-                    {...registerDealer("address")}
-                    className="w-full p-2 border rounded"
-                  />
-                  <label>PIN Code</label>
-                  <input
-                    type="text"
-                    {...registerDealer("pinCode")}
-                    className="w-full p-2 border rounded"
-                  />
-                  <label>Contact No.</label>
-                  <input
-                    type="text"
-                    {...registerDealer("contactNo")}
-                    className="w-full p-2 border rounded"
-                  />
-                  <label>Location (Lat, Lng)</label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Dealer Name
+                    </label>
                     <input
                       type="text"
-                      {...registerDealer("lat")}
-                      placeholder="Latitude"
-                      className="w-full p-2 border rounded"
+                      {...registerDealer("name")}
+                      className="mt-1 w-full p-2 border rounded-md"
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Address
+                    </label>
                     <input
                       type="text"
-                      {...registerDealer("lng")}
-                      placeholder="Longitude"
-                      className="w-full p-2 border rounded"
+                      {...registerDealer("address")}
+                      className="mt-1 w-full p-2 border rounded-md"
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      PIN Code
+                    </label>
+                    <input
+                      type="text"
+                      {...registerDealer("pinCode")}
+                      className="mt-1 w-full p-2 border rounded-md"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Contact No.
+                    </label>
+                    <input
+                      type="text"
+                      {...registerDealer("contactNo")}
+                      className="mt-1 w-full p-2 border rounded-md"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Location (Lat, Lng)
+                    </label>
+                    <div className="grid grid-cols-2 gap-4 mt-1">
+                      <input
+                        type="text"
+                        {...registerDealer("lat")}
+                        placeholder="Latitude"
+                        className="w-full p-2 border rounded-md"
+                      />
+                      <input
+                        type="text"
+                        {...registerDealer("lng")}
+                        placeholder="Longitude"
+                        className="w-full p-2 border rounded-md"
+                      />
+                    </div>
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-lime-500 text-white font-bold py-3 rounded"
+                    className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-blue-600"
                   >
                     Add Dealer
                   </button>
