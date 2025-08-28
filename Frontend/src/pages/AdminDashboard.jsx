@@ -1,60 +1,85 @@
+// src/pages/AdminDashboardPage.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMail, FiMessageSquare, FiShield } from "react-icons/fi";
 import axios from "axios";
+import toast from 'react-hot-toast';
 
-
-
+// --- Reusable Pagination Component ---
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  if (totalPages <= 1) return null;
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  return (
+    <div className="flex justify-center items-center space-x-2 mt-6">
+      {pages.map((page) => (
+        <button
+          key={page}
+          onClick={() => onPageChange(page)}
+          className={`px-4 py-2 rounded-md text-sm font-semibold ${
+            currentPage === page
+              ? "bg-green-500 text-white"
+              : "bg-gray-200 hover:bg-gray-300"
+          }`}
+        >
+          {page}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 const AdminDashboardPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("contacts");
 
-  const [contacts, setContacts] = useState([]);
-  const [complaints, setComplaints] = useState([]);
-  const [warranties, setWarranties] = useState([]);
+  // State to hold paginated data for each tab
+  const [data, setData] = useState({
+    contacts: { items: [], currentPage: 1, totalPages: 1 },
+    complaints: { items: [], currentPage: 1, totalPages: 1 },
+    warranties: { items: [], currentPage: 1, totalPages: 1 },
+  });
 
-   useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem("adminToken");
-      if (!token) {
-        navigate("/admin-login");
-        return;
-      }
-      
-      // Prepare the authorization header
-      const config = {
-        headers: { Authorization: `Bearer ${token}` }
-      };
+  // Reusable function to fetch data for a specific tab and page
+  const fetchDataForTab = useCallback(async (tab, page = 1) => {
+    const token = localStorage.getItem("adminToken");
+    if (!token) {
+      navigate("/admin-login");
+      return;
+    }
+    const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      try {
-        // Fetch all data from the secure endpoints
-        const [contactsRes, complaintsRes, warrantiesRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/api/v1/admin/contacts`, config),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/v1/admin/complaints`, config),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/v1/admin/warranties`, config)
-        ]);
-        
-        setContacts(contactsRes.data);
-        setComplaints(complaintsRes.data);
-        setWarranties(warrantiesRes.data);
-
-      } catch (error) {
-        console.error("Failed to fetch admin data:", error);
-        // If token is invalid, log the user out
-        localStorage.removeItem("adminToken");
-        navigate("/admin-login");
-      }
-    };
-
-    fetchData();
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/v1/admin/${tab}?page=${page}`,
+        config
+      );
+      setData((prevData) => ({
+        ...prevData,
+        [tab]: {
+          items: response.data.data,
+          currentPage: response.data.currentPage,
+          totalPages: response.data.totalPages,
+        },
+      }));
+    } catch (error) {
+      console.error(`Failed to fetch ${tab}`, error);
+      toast.error(`Could not load ${tab}.`);
+    }
   }, [navigate]);
 
+  // Fetch data when the component mounts or the active tab changes
+  useEffect(() => {
+    fetchDataForTab(activeTab);
+  }, [activeTab, fetchDataForTab]);
+
+  const handlePageChange = (tab, page) => {
+    fetchDataForTab(tab, page);
+  };
+
   const handleLogout = () => {
-    console.log("Logout clicked!");
     localStorage.removeItem("adminToken");
     navigate("/admin-login", { replace: true });
   };
@@ -62,14 +87,14 @@ const AdminDashboardPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 relative">
-          <h1 className="text-3xl sm:text-4xl font-bold  mb-4 sm:mb-0">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-0">
             Admin Dashboard
           </h1>
           <button
             type="button"
             onClick={handleLogout}
-            className="bg-red-500 text-white font-bold py-2 px-6 rounded-md hover:bg-red-600 cursor-pointer transition-colors relative z-100"
+            className="bg-red-500 text-white font-bold py-2 px-6 rounded-md hover:bg-red-600 cursor-pointer transition-colors"
           >
             Logout
           </button>
@@ -97,9 +122,9 @@ const AdminDashboardPage = () => {
             <FiMessageSquare /> <span>Product Complaints</span>
           </button>
           <button
-            onClick={() => setActiveTab("warranty")}
+            onClick={() => setActiveTab("warranties")}
             className={`flex items-center space-x-2 py-3 px-6 text-lg font-semibold ${
-              activeTab === "warranty"
+              activeTab === "warranties"
                 ? "border-b-2 border-green-500 text-green-600"
                 : "text-gray-500 hover:text-green-500"
             }`}
@@ -125,8 +150,21 @@ const AdminDashboardPage = () => {
                       <th className="px-4 py-2 border">Message</th>
                     </tr>
                   </thead>
-                  <tbody>{contacts.map((c) => (<tr key={c._id}><td className="px-4 py-2 border">{c.name}</td><td className="px-4 py-2 border">{c.email}</td><td className="px-4 py-2 border">{c.message}</td></tr>))}</tbody>
+                  <tbody>
+                    {data.contacts.items.map((c) => (
+                      <tr key={c._id}>
+                        <td className="px-4 py-2 border">{c.name}</td>
+                        <td className="px-4 py-2 border">{c.email}</td>
+                        <td className="px-4 py-2 border">{c.message}</td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
+                <Pagination
+                  currentPage={data.contacts.currentPage}
+                  totalPages={data.contacts.totalPages}
+                  onPageChange={(page) => handlePageChange("contacts", page)}
+                />
               </div>
             </motion.div>
           )}
@@ -148,15 +186,29 @@ const AdminDashboardPage = () => {
                       <th className="px-4 py-2 border">Complaint</th>
                     </tr>
                   </thead>
-                  <tbody>{complaints.map((c) => (<tr key={c._id}><td className="px-4 py-2 border">{c.name}</td><td className="px-4 py-2 border">{c.phone}</td><td className="px-4 py-2 border">{c.productModel}</td><td className="px-4 py-2 border">{c.complaint}</td></tr>))}</tbody>
+                  <tbody>
+                    {data.complaints.items.map((c) => (
+                      <tr key={c._id}>
+                        <td className="px-4 py-2 border">{c.name}</td>
+                        <td className="px-4 py-2 border">{c.phone}</td>
+                        <td className="px-4 py-2 border">{c.productModel}</td>
+                        <td className="px-4 py-2 border">{c.complaint}</td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
+                <Pagination
+                  currentPage={data.complaints.currentPage}
+                  totalPages={data.complaints.totalPages}
+                  onPageChange={(page) => handlePageChange("complaints", page)}
+                />
               </div>
             </motion.div>
           )}
 
-          {activeTab === "warranty" && (
+          {activeTab === "warranties" && (
             <motion.div
-              key="warranty"
+              key="warranties"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -171,8 +223,22 @@ const AdminDashboardPage = () => {
                       <th className="px-4 py-2 border">Issue</th>
                     </tr>
                   </thead>
-                  <tbody>{warranties.map((c) => (<tr key={c._id}><td className="px-4 py-2 border">{c.name}</td><td className="px-4 py-2 border">{c.phone}</td><td className="px-4 py-2 border">{c.serialNumber}</td><td className="px-4 py-2 border">{c.issue}</td></tr>))}</tbody>
+                  <tbody>
+                    {data.warranties.items.map((c) => (
+                      <tr key={c._id}>
+                        <td className="px-4 py-2 border">{c.name}</td>
+                        <td className="px-4 py-2 border">{c.phone}</td>
+                        <td className="px-4 py-2 border">{c.serialNumber}</td>
+                        <td className="px-4 py-2 border">{c.issue}</td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
+                <Pagination
+                  currentPage={data.warranties.currentPage}
+                  totalPages={data.warranties.totalPages}
+                  onPageChange={(page) => handlePageChange("warranties", page)}
+                />
               </div>
             </motion.div>
           )}
