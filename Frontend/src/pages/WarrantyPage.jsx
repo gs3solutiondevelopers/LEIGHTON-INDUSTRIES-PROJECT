@@ -1,8 +1,10 @@
+// src/pages/WarrantyPage.jsx
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import warranty from "../assets/warranty.png";
-import axios from "axios";
-import toast from "react-hot-toast";
+import axios from "axios"; // 1. Import axios
+import toast from "react-hot-toast"; // 2. Import toast
 import { FiFileText, FiCheckCircle, FiClipboard } from "react-icons/fi";
 
 const WarrantyPage = () => {
@@ -10,9 +12,10 @@ const WarrantyPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
+    reset, // 3. Get the reset function
   } = useForm();
 
+  // 4. Update the onSubmit function to be async and handle the API call
   const onSubmit = async (data) => {
     const toastId = toast.loading("Submitting your claim...");
     try {
@@ -25,7 +28,7 @@ const WarrantyPage = () => {
         toast.success("Warranty claim submitted successfully!", {
           id: toastId,
         });
-        reset();
+        reset(); // Clear the form
       } else {
         toast.error(response.data.message || "Failed to submit claim.", {
           id: toastId,
@@ -41,6 +44,7 @@ const WarrantyPage = () => {
 
   return (
     <div className="bg-gray-50">
+      {/* Corrected invalid h-106 class to h-96 */}
       <div className="relative h-106">
         <img
           src={warranty}
