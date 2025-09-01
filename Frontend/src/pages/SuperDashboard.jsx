@@ -316,16 +316,22 @@ const SuperAdminDashboardPage = () => {
 
       if (isProduct) {
         const formData = new FormData();
+        
         Object.keys(updatedData).forEach((key) => {
-          if (key === "heroImage" || key === "galleryImages") {
-            if (updatedData[key] && updatedData[key].length > 0) {
-              for (let i = 0; i < updatedData[key].length; i++) {
-                formData.append(key, updatedData[key][i]);
-              }
+            if (key === 'features') {
+                // Correctly split the string back into an array before stringifying
+                formData.append(key, JSON.stringify(updatedData[key].split(',').map(f => f.trim())));
+            } else if (key === 'specifications') {
+                formData.append(key, JSON.stringify(updatedData[key]));
+            } else if (key === 'heroImage' || key === 'galleryImages') {
+                if (updatedData[key] && updatedData[key].length > 0) {
+                    for (let i = 0; i < updatedData[key].length; i++) {
+                        formData.append(key, updatedData[key][i]);
+                    }
+                }
+            } else {
+                formData.append(key, updatedData[key]);
             }
-          } else {
-            formData.append(key, updatedData[key]);
-          }
         });
         payload = formData;
         config.headers["Content-Type"] = "multipart/form-data";
@@ -339,7 +345,6 @@ const SuperAdminDashboardPage = () => {
 
       toast.success(`${editingType} updated successfully!`, { id: toastId });
       closeEditModal();
-      // Refetch data for the current tab to show updates
       fetchDataForTab(
         activeTab,
         data[isProduct ? "products" : "dealers"].currentPage
