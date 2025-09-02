@@ -49,3 +49,20 @@ a {
 .nav-link-underline:hover::after {
   transform: scaleX(1);
 }
+/* ... your existing CSS ... */
+
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* This is the fix: We only scroll through the first half (the original list) 
+       of the duplicated content to create a seamless loop. */
+    transform: translateX(-50%);
+  }
+}
+
+.animate-infinite-scroll {
+  /* The animation speed is set to 40s. You can adjust this value for faster or slower scrolling. */
+  animation: infinite-scroll 80s linear infinite;
+}

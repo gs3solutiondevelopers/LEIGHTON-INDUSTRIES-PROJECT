@@ -11,19 +11,19 @@ const ProductComplaintPage = () => {
 
 
   const onSubmit = async (data) => {
-    const toastId = toast.loading("Submitting your complaint...");
+    const toastId = toast.loading("Submitting your feedback...");
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/forms/complaint`, data);
 
       if (response.data.success) {
-        toast.success('Complaint submitted successfully!', { id: toastId });
+        toast.success('feedback submitted successfully!', { id: toastId });
         reset(); 
       } else {
-        toast.error(response.data.message || 'Failed to submit complaint.', { id: toastId });
+        toast.error(response.data.message || 'Failed to submit feedback.', { id: toastId });
       }
     } catch (error) {
       toast.error('Could not connect to the server. Please try again.', { id: toastId });
-      console.error("Complaint form error:", error);
+      console.error("feedback form error:", error);
     }
   };
 
@@ -32,19 +32,19 @@ const ProductComplaintPage = () => {
       <div className="relative h-113">
         <img 
           src={complaint} 
-          alt="Filing a complaint" 
+          alt="Filing a feedback" 
           className="absolute inset-0 w-full h-full object-cover z-0"
         />
         <div className="relative z-10 h-full flex flex-col items-center justify-center bg-black/60 text-white text-center p-4">
-          <h1 className="text-5xl font-bold">Product Complaint</h1>
-          <p className="text-lg mt-4">We are sorry for the inconvenience. Please describe the issue below.</p>
+          <h1 className="text-5xl font-bold">Product Feedback</h1>
+          <p className="text-lg mt-4">We are eager to listen from you the space for the improvements in our products</p>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-6 py-20">
         <div className="bg-white p-8 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-semibold text-brand-dark mb-6">Complaint Form</h2>
+          <h2 className="text-3xl font-semibold text-brand-dark mb-6">Feedback Form</h2>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
@@ -80,7 +80,7 @@ const ProductComplaintPage = () => {
               {errors.productModel && <p className="text-red-500 text-sm mt-1">{errors.productModel.message}</p>}
             </div>
             <div>
-              <label htmlFor="complaint" className="block text-sm font-medium text-gray-700">Describe Your Complaint</label>
+              <label htmlFor="complaint" className="block text-sm font-medium text-gray-700">Describe Your Thoughts</label>
               <textarea 
                 id="complaint" 
                 rows="5"
@@ -94,7 +94,7 @@ const ProductComplaintPage = () => {
                 type="submit"
                 className="w-full bg-green-500 text-white font-bold py-3 px-6 rounded-md hover:bg-green-600 transition-all duration-300 transform hover:scale-105"
               >
-                Submit Complaint
+                Submit Feedback
               </button>
             </div>
           </form>

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMail, FiMessageSquare, FiShield } from "react-icons/fi";
 import axios from "axios";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 // --- Reusable Pagination Component ---
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -42,43 +42,61 @@ const AdminDashboardPage = () => {
     warranties: { items: [], currentPage: 1, totalPages: 1 },
   });
 
-  // Reusable function to fetch data for a specific tab and page
-  const fetchDataForTab = useCallback(async (tab, page = 1) => {
-    const token = localStorage.getItem("adminToken");
-    if (!token) {
-      navigate("/admin-login");
-      return;
-    }
-    const config = { headers: { Authorization: `Bearer ${token}` } };
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v1/admin/${tab}?page=${page}`,
-        config
-      );
-      setData((prevData) => ({
-        ...prevData,
-        [tab]: {
-          items: response.data.data,
-          currentPage: response.data.currentPage,
-          totalPages: response.data.totalPages,
-        },
-      }));
-    } catch (error) {
-      console.error(`Failed to fetch ${tab}`, error);
-      toast.error(`Could not load ${tab}.`);
-    }
-  }, [navigate]);
+  // We need to pass the updated start/end dates directly to the fetch function
+  const fetchDataForTab = useCallback(
+    async (tab, page = 1, start = startDate, end = endDate) => {
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        navigate("/admin-login");
+        return;
+      }
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { page, startDate: start, endDate: end },
+      };
 
-  // Fetch data when the component mounts or the active tab changes
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/v1/admin/${tab}`,
+          config
+        );
+        setData((prevData) => ({
+          ...prevData,
+          [tab]: {
+            items: response.data.data,
+            currentPage: response.data.currentPage,
+            totalPages: response.data.totalPages,
+          },
+        }));
+      } catch (error) {
+        console.error(`Failed to fetch ${tab}`, error);
+        toast.error(`Could not load ${tab}.`);
+      }
+    },
+    [navigate, startDate, endDate]
+  );
+
   useEffect(() => {
-    fetchDataForTab(activeTab);
+    fetchDataForTab(activeTab, 1);
   }, [activeTab, fetchDataForTab]);
 
   const handlePageChange = (tab, page) => {
     fetchDataForTab(tab, page);
   };
 
+  const handleFilter = () => {
+    fetchDataForTab(activeTab, 1);
+  };
+
+  const handleClearFilter = () => {
+    setStartDate("");
+    setEndDate("");
+    // Pass the cleared dates directly to the fetch function
+    fetchDataForTab(activeTab, 1, "", "");
+  };
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
     navigate("/admin-login", { replace: true });
@@ -119,7 +137,7 @@ const AdminDashboardPage = () => {
                 : "text-gray-500 hover:text-green-500"
             }`}
           >
-            <FiMessageSquare /> <span>Product Complaints</span>
+            <FiMessageSquare /> <span>Product Feedback</span>
           </button>
           <button
             onClick={() => setActiveTab("warranties")}
@@ -129,7 +147,46 @@ const AdminDashboardPage = () => {
                 : "text-gray-500 hover:text-green-500"
             }`}
           >
-            <FiShield /> <span>Warranty Claims</span>
+            <FiShield /> <span>Product Complaints</span>
+          </button>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-wrap items-center gap-4">
+          <div className="flex items-center space-x-2">
+            <label htmlFor="startDate" className="font-semibold text-gray-700">
+              From:
+            </label>
+            <input
+              type="date"
+              id="startDate"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="p-2 border rounded-md"
+            />
+          </div>
+          <div className="flex items-center space-x-2">
+            <label htmlFor="endDate" className="font-semibold text-gray-700">
+              To:
+            </label>
+            <input
+              type="date"
+              id="endDate"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="p-2 border rounded-md"
+            />
+          </div>
+          <button
+            onClick={handleFilter}
+            className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600"
+          >
+            Filter
+          </button>
+          <button
+            onClick={handleClearFilter}
+            className="bg-gray-500 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600"
+          >
+            Clear
           </button>
         </div>
 

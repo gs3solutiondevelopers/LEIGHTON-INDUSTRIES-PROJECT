@@ -52,9 +52,9 @@ const WarrantyPage = () => {
           className="absolute inset-0 w-full h-full object-cover z-0"
         />
         <div className="relative z-10 h-full flex flex-col items-center justify-center bg-black/60 text-white text-center p-4">
-          <h1 className="text-5xl font-bold">Warranty Claim</h1>
+          <h1 className="text-5xl font-bold">Product Complaint</h1>
           <p className="text-lg mt-4">
-            Please review the conditions below before submitting your claim.
+            Please review the conditions below before submitting your complaint.
           </p>
         </div>
       </div>
@@ -63,13 +63,13 @@ const WarrantyPage = () => {
         <div className="space-y-12">
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-3xl font-semibold text-brand-dark mb-8 text-center">
-              Warranty Process & Conditions
+              Registration Process & Conditions
             </h2>
 
             <div className="mb-10">
               <h3 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
-                <FiClipboard className="mr-3 text-green-500" /> How to Claim
-                Your Warranty
+                <FiClipboard className="mr-3 text-green-500" /> How to register
+                Your complaint
               </h3>
               <div className="grid sm:grid-cols-2 gap-6">
                 <div className="bg-gray-50 p-4 rounded-lg flex items-start space-x-4">
@@ -119,7 +119,7 @@ const WarrantyPage = () => {
               <ul className="space-y-4">
                 <li className="flex items-start">
                   <FiFileText className="h-5 w-5 mr-3 mt-1 text-green-500 flex-shrink-0" />
-                  The warranty is valid only from the original date of purchase
+                  The complaint is valid only from the original date of purchase
                   and is non-transferable.
                 </li>
                 <li className="flex items-start">
@@ -143,7 +143,7 @@ const WarrantyPage = () => {
 
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-3xl font-semibold text-brand-dark mb-6">
-              Claim Submission Form
+              Complaint Submission Form
             </h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
@@ -259,7 +259,7 @@ const WarrantyPage = () => {
                   type="submit"
                   className="w-full bg-green-500 text-white font-bold py-3 px-6 rounded-md hover:bg-green-600 transition-all duration-300 transform hover:scale-105"
                 >
-                  Submit Claim
+                  Submit complaint
                 </button>
               </div>
             </form>
