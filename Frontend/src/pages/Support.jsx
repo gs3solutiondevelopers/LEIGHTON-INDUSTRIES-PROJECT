@@ -8,15 +8,15 @@ import { FaUserCheck } from 'react-icons/fa';
 const supportLinks = [
   {
     icon: <FiShield />,
-    title: 'Warranty Claim',
+    title: 'Product Complaint',
     description: 'Submit a new warranty claim or check the status of an existing one.',
-    path: '/support/warranty',
+    path: '/support/complaint',
   },
   {
     icon: <FiMessageSquare />,
-    title: 'Product Complaint',
+    title: 'Product Feedback',
     description: 'Lodge a complaint or provide feedback about a specific product.',
-    path: '/support/complaint',
+    path: '/support/feedback',
   },
   {
     icon: <FiFileText />,

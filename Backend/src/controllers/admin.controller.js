@@ -97,11 +97,26 @@ const logoutAdmin = (req, res) => {
 const getPaginatedData = async (Model, req, res, errorMessage) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 10; // 10 records per page
+    const limit = 10;
     const skip = (page - 1) * limit;
+    
+    // --- DATE FILTER LOGIC ---
+    const { startDate, endDate } = req.query;
+    const dateFilter = {};
+    if (startDate) {
+        // Set the start of the day
+        dateFilter.createdAt = { ...dateFilter.createdAt, $gte: new Date(startDate) };
+    }
+    if (endDate) {
+        // Set the end of the day to include all records on that date
+        const endOfDay = new Date(endDate);
+        endOfDay.setHours(23, 59, 59, 999);
+        dateFilter.createdAt = { ...dateFilter.createdAt, $lte: endOfDay };
+    }
+    // -------------------------
 
-    const items = await Model.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit);
-    const totalItems = await Model.countDocuments();
+    const items = await Model.find(dateFilter).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    const totalItems = await Model.countDocuments(dateFilter);
     const totalPages = Math.ceil(totalItems / limit);
 
     res.status(200).json({

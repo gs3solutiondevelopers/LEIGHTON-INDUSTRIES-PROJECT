@@ -42,8 +42,8 @@ const App = () => {
             <Route path="/terms-conditions" element={<Terms />} />
             <Route path="/privacy-policy" element={<Privacy/>}/>
             {/* supprt routes */}
-            <Route path="/support/warranty" element={<WarrantyPage />} />
-            <Route path="/support/complaint" element={<Complaint />} />
+            <Route path="/support/complaint" element={<WarrantyPage />} />
+            <Route path="/support/feedback" element={<Complaint />} />
             <Route path="/support/dealer" element={<Dealer />} />
 
             <Route path="/admin-login" element={<AdminLogin />} />

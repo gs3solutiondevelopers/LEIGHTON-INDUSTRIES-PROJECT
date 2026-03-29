@@ -12,11 +12,13 @@ import {
   FiShield,
   FiUsers,
   FiPackage,
+  FiEdit3,
+  FiDelete,
 } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import EditModal from "../components/admin/EditModal";
 // --- Reusable Pagination Component ---
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   if (totalPages <= 1) return null;
@@ -51,6 +53,10 @@ const SuperAdminDashboardPage = () => {
     dealers: { items: [], currentPage: 1, totalPages: 1 },
     products: { items: [], currentPage: 1, totalPages: 1 },
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+  const [editingType, setEditingType] = useState(""); // 'product' or 'dealer'
 
   const {
     register: registerProduct,
@@ -284,6 +290,74 @@ const SuperAdminDashboardPage = () => {
     }
   };
 
+  const openEditModal = (item, type) => {
+    setEditingItem(item);
+    setEditingType(type);
+    setIsModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsModalOpen(false);
+    setEditingItem(null);
+    setEditingType("");
+  };
+
+  const handleSave = async (id, updatedData) => {
+    const isProduct = editingType === "product";
+    const endpoint = isProduct
+      ? `/api/v1/super-admin/products/${id}`
+      : `/api/v1/super-admin/dealers/${id}`;
+    const toastId = toast.loading(`Updating ${editingType}...`);
+
+    try {
+      const token = localStorage.getItem("superAdminToken");
+      let config = { headers: { Authorization: `Bearer ${token}` } };
+      let payload = updatedData;
+
+      if (isProduct) {
+        const formData = new FormData();
+
+        Object.keys(updatedData).forEach((key) => {
+          if (key === "features") {
+            // Correctly split the string back into an array before stringifying
+            formData.append(
+              key,
+              JSON.stringify(updatedData[key].split(",").map((f) => f.trim()))
+            );
+          } else if (key === "specifications") {
+            formData.append(key, JSON.stringify(updatedData[key]));
+          } else if (key === "heroImage" || key === "galleryImages") {
+            if (updatedData[key] && updatedData[key].length > 0) {
+              for (let i = 0; i < updatedData[key].length; i++) {
+                formData.append(key, updatedData[key][i]);
+              }
+            }
+          } else {
+            formData.append(key, updatedData[key]);
+          }
+        });
+        payload = formData;
+        config.headers["Content-Type"] = "multipart/form-data";
+      }
+
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}${endpoint}`,
+        payload,
+        config
+      );
+
+      toast.success(`${editingType} updated successfully!`, { id: toastId });
+      closeEditModal();
+      fetchDataForTab(
+        activeTab,
+        data[isProduct ? "products" : "dealers"].currentPage
+      );
+    } catch (error) {
+      toast.error(`Failed to update ${editingType}.`, { id: toastId });
+      console.error(`Update ${editingType} error:`, error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
@@ -319,7 +393,7 @@ const SuperAdminDashboardPage = () => {
                 : "text-gray-500 hover:text-lime-500"
             }`}
           >
-            <FiMessageSquare /> <span>Complaints</span>
+            <FiMessageSquare /> <span>Feedback</span>
           </button>
           <button
             onClick={() => setActiveTab("warranties")}
@@ -329,7 +403,7 @@ const SuperAdminDashboardPage = () => {
                 : "text-gray-500 hover:text-lime-500"
             }`}
           >
-            <FiShield /> <span>Warranties</span>
+            <FiShield /> <span>Complaints</span>
           </button>
           <button
             onClick={() => setActiveTab("viewDealers")}
@@ -510,12 +584,18 @@ const SuperAdminDashboardPage = () => {
                         <td className="px-4 py-2 border">{d.name}</td>
                         <td className="px-4 py-2 border">{d.address}</td>
                         <td className="px-4 py-2 border">{d.pinCode}</td>
-                        <td className="px-4 py-2 border text-center">
+                        <td className="px-4 py-2 border text-center space-x-2">
+                          <button
+                            onClick={() => openEditModal(d, "dealer")}
+                            className="bg-lime-500 text-white px-3 py-1 rounded hover:bg-lime-600"
+                          >
+                            <FiEdit3 size={18} />
+                          </button>
                           <button
                             onClick={() => handleDeleteDealer(d._id)}
                             className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                           >
-                            Delete
+                            <FiDelete size={18} />
                           </button>
                         </td>
                       </tr>
@@ -553,12 +633,18 @@ const SuperAdminDashboardPage = () => {
                       <tr key={p._id}>
                         <td className="px-4 py-2 border">{p.name}</td>
                         <td className="px-4 py-2 border">{p.category}</td>
-                        <td className="px-4 py-2 border text-center">
+                        <td className="px-4 py-2 border text-center space-x-2">
+                          <button
+                            onClick={() => openEditModal(p, "product")}
+                            className="bg-lime-500 text-white px-3 py-1 rounded hover:bg-lime-600"
+                          >
+                            <FiEdit3 size={18} />
+                          </button>
                           <button
                             onClick={() => handleDeleteProduct(p._id)}
                             className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                           >
-                            Delete
+                            <FiDelete size={18} />
                           </button>
                         </td>
                       </tr>
@@ -683,7 +769,7 @@ const SuperAdminDashboardPage = () => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-blue-600"
+                    className="w-full bg-lime-500 text-white font-bold py-3 rounded-md hover:bg-lime-600"
                   >
                     Upload Product
                   </button>
@@ -765,7 +851,7 @@ const SuperAdminDashboardPage = () => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-blue-600"
+                    className="w-full bg-lime-500 text-white font-bold py-3 rounded-md hover:bg-lime-600"
                   >
                     Add Dealer
                   </button>
@@ -775,6 +861,16 @@ const SuperAdminDashboardPage = () => {
           )}
         </AnimatePresence>
       </div>
+      <AnimatePresence>
+        {isModalOpen && (
+          <EditModal
+            item={editingItem}
+            type={editingType}
+            onClose={closeEditModal}
+            onSave={handleSave}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
